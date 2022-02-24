@@ -12,7 +12,7 @@ type armCPU_T = {
   regs: { [key: string]: number; },
   memory: number[],
   stack: number[],
-  program: Array<Instruction>,
+  program: Instruction[],
   pc: number,
   sp: number,
 
@@ -20,7 +20,7 @@ type armCPU_T = {
   run: () => void,
   step: () => void,
   reset: () => void,
-  load: (program: Array<Instruction>) => void,
+  load: (program: Instruction[]) => void,
   load_assembly: (assembly: string) => void,
   execute: (ins: Instruction) => void,
 }
@@ -65,14 +65,14 @@ function defaultCPU(): armCPU_T {
       this.program = compiled.ins;
     },
     execute: function(ins: Instruction) {
-      assert(Operation.TOTAL_OPERATIONS == 2, "Exhaustive handling of operations in execute");
+      assert(Operation.TOTAL_OPERATIONS === 2, "Exhaustive handling of operations in execute");
       switch (ins.operation) {
         case Operation.MOV: {
           const [op1, op2] = ins.operands;
           // op1 is always a register and op2 can be a register or inmediate
-          if (op2.type == OperandType.LowRegister || op2.type == OperandType.HighRegister) {
+          if (op2.type === OperandType.LowRegister || op2.type === OperandType.HighRegister) {
             this.regs[op1.value] = this.regs[op2.value];
-          } else if (op2.type == OperandType.HexInmediate || op2.type == OperandType.DecInmediate) {
+          } else if (op2.type === OperandType.HexInmediate || op2.type === OperandType.DecInmediate) {
             const value = parseInt(op2.value.slice(1));
             this.regs[op1.value] = value;
           } else {
@@ -94,9 +94,8 @@ function defaultCPU(): armCPU_T {
           }
         } break;
 
-        default: {
+        default:
           throw new Error("Invalid operation in execute. This should never happen.");
-        }
       }
     },
   };
@@ -105,4 +104,4 @@ function defaultCPU(): armCPU_T {
 }
 
 export default defaultCPU;
-export { armCPU_T };
+export type { armCPU_T };

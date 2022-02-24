@@ -40,7 +40,7 @@ type Instruction = {
 
 type Program = {
   error?: CompilerError,
-  ins: Array<Instruction>,
+  ins: Instruction[],
 }
 
 function operand_to_optype(operand: string): OperandType | string {
@@ -109,8 +109,7 @@ function line_to_op(line: string): Instruction | string {
           operation: operation,
           operands: [ { type: op1_type, value: operands[0] }, { type: op2_type, value: operands[1] } ],
         };
-
-      } break;
+      };
 
     case Operation.ADD: {
       if (operands.length < 2) {
@@ -142,17 +141,11 @@ function line_to_op(line: string): Instruction | string {
         operation: operation,
         operands: [ { type: op1_type, value: operands[0] }, { type: op2_type, value: operands[1] } ],
       };
-
-    } break;
+    };
 
     default:
-      console.log("[compiler] Unreachable code in line_to_op");
+      throw new Error("Unreachable code in line_to_op");
   }
-
-  return {
-    operation: operation,
-    operands: [],
-  };
 }
 
 function compile_assembly(source: string): Program {
@@ -180,4 +173,5 @@ function compile_assembly(source: string): Program {
 }
 
 export default compile_assembly;
-export { Instruction, Operation, OperandType, assert };
+export { Operation, OperandType, assert };
+export type { Instruction };
