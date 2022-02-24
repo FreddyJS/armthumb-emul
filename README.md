@@ -1,4 +1,5 @@
 # armthumb-emul
+[![Emulator Tests](https://github.com/FreddyJS/armthumb-emul/actions/workflows/tests.yml/badge.svg)](https://github.com/FreddyJS/armthumb-emul/actions/workflows/tests.yml)  
 Emulator for ARM Thumb Assembly. Library for a web arm thumb ide with code emulation.
 
 ## Registers
