@@ -37,6 +37,7 @@ for (let i = 0; i < files.length; i++) {
   try {
     const expected = fs.readFileSync(assembly_folder + file + ".json", 'utf8');
     const state = JSON.parse(expected);
+    console.log(`[tests] Comparing expected state with actual state...`);
     if (JSON.stringify(cpu.regs) !== JSON.stringify(state.regs)) {
       console.error(`[tests] Registers mismatch. Expected: ${JSON.stringify(state.regs)}, got: ${JSON.stringify(cpu.regs)}`);
       failed++;
@@ -49,7 +50,7 @@ for (let i = 0; i < files.length; i++) {
     // No expected output saved yet.
     console.warn(`[tests] No expected output saved for '${file}'.`);
   }
-  console.log(`[tests] ${file} passed.`);
+  console.log(`[tests] File '${file}' passed.`);
   passed++;
 
   if (!ci) {
