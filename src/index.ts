@@ -7,4 +7,4 @@ import compile_assembly from "./compiler";
 import { Instruction, Operation, OperandType } from "./compiler";
 
 export default armCPU;
-export { compile_assembly, Instruction, Operation, OperandType };
+export { compile_assembly, Instruction, Operation, OperandType, armCPU_T };
