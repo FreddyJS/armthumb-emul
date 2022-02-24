@@ -149,7 +149,28 @@ function line_to_op(line: string): Instruction | string {
 }
 
 function compile_assembly(source: string): Program {
-  const lines = source.split('\n').map((line) => line.trim()).filter((line) => line.length > 0);
+  const text_start = source.indexOf(".text");
+  const data_start = source.indexOf(".data");
+  if (text_start === -1) {
+    return { error: { message: "Missing .text directive", line: 0, column: 0 }, ins: [] };
+  }
+
+  let text_section = "";
+  let data_section = "";
+  if (data_start === -1) {
+    // No data section in assembly, no memory needed
+    text_section = source.slice(text_start + 5);
+  } else if (data_start < text_start) {
+    // Data section is before text section
+    text_section = source.slice(text_start + 5);
+    data_section = source.slice(data_start + 5, text_start);
+  } else {
+    // Data section is after text section
+    text_section = source.slice(text_start + 5, data_start);
+    data_section = source.slice(data_start + 5);
+  }
+
+  const lines = text_section.split('\n').map((line) => line.trim()).filter((line) => line.length > 0);
   const program: Program = {
     ins: [],
   };
