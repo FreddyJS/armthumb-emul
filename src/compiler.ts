@@ -43,6 +43,26 @@ type Program = {
   ins: Instruction[],
 }
 
+function strip_comments(source: string) {
+  return source.split('\n').map((line) => {
+    let comment_index = line.indexOf(';');
+    comment_index = comment_index === -1 ? line.indexOf("@") : comment_index;
+    if (comment_index === -1) {
+      return line.trim();
+    } else {
+      return line.slice(0, comment_index).trim();
+    }
+  }).join('\n');
+}
+
+function strip_empty_lines(source: string) {
+  return source.split('\n').filter((line) => line.length > 0).join('\n');
+}
+
+function clean_input(source: string): string {
+  return strip_empty_lines(strip_comments(source));
+}
+
 function operand_to_optype(operand: string): OperandType | string {
   if (operand.startsWith('r')) {
     // Register Operand
@@ -53,11 +73,11 @@ function operand_to_optype(operand: string): OperandType | string {
       return OperandType.HighRegister;
     }
 
-    return "Invalid register. Expected r[0-7] or r[8-15] but got " + reg;
+    return "Invalid register. Expected r[0-7] or r[8-15] but got r" + reg;
   } else if (operand.startsWith('#')) {
     if (operand.startsWith('#0x')) {
       if (isNaN(operand.slice(1) as any)) {
-        return "Invalid hexadecimal inmediate. Expected 0x[0-9a-fA-F] but got " + operand.slice(1);
+        return "Invalid hexadecimal inmediate. Expected 0x[0-9a-fA-F] but got " + operand;
       }
       return OperandType.HexInmediate;
     } else if (!isNaN(operand.slice(1) as any)) {
@@ -149,6 +169,8 @@ function line_to_op(line: string): Instruction | string {
 }
 
 function compile_assembly(source: string): Program {
+  source = clean_input(source);
+
   const text_start = source.indexOf(".text");
   const data_start = source.indexOf(".data");
   if (text_start === -1) {
@@ -170,13 +192,13 @@ function compile_assembly(source: string): Program {
     data_section = source.slice(data_start + 5);
   }
 
-  const lines = text_section.split('\n').map((line) => line.trim()).filter((line) => line.length > 0);
+  const lines = text_section.split('\n');
   const program: Program = {
     ins: [],
   };
 
   for (let i = 0; i < lines.length; i++) {
-    const line = lines[i].split(';').length > 0 ? lines[i].split(';')[0].trim() : lines[i];
+    const line = lines[i];
     if (line.length === 0) {
       continue;
     }
