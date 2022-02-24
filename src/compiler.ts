@@ -6,11 +6,13 @@ const assert = (condition: boolean, message: string) => {
 
 enum Operation {
   MOV,
+  ADD,
   TOTAL_OPERATIONS,
 }
 
 const str_to_op: { [key: string]: Operation } = {
   'mov': Operation.MOV,
+  'add': Operation.ADD,
 }
 
 enum OperandType {
@@ -75,10 +77,10 @@ function line_to_op(line: string): Instruction | string {
 
   const operation = str_to_op[words[0]];
   if (operation === undefined) {
-    return "Unknown operation";
+    return "Unknown operation: " + words[0];
   }
 
-  assert(Operation.TOTAL_OPERATIONS === 1, "Exhaustive handling of operations in line_to_op");
+  assert(Operation.TOTAL_OPERATIONS === 2, "Exhaustive handling of operations in line_to_op");
   switch (operation) {
     case Operation.MOV:
       {
@@ -109,6 +111,39 @@ function line_to_op(line: string): Instruction | string {
         };
 
       } break;
+
+    case Operation.ADD: {
+      if (operands.length < 2) {
+        return "Invalid number of operands for ADD. Expected 2 or 3, got " + operands.length;
+      }
+
+      const op1_type = operand_to_optype(operands[0]);
+      if (typeof op1_type === 'string') {
+        return op1_type;
+      }
+
+      const op2_type = operand_to_optype(operands[1]);
+      if (typeof op2_type === 'string') {
+        return op2_type;
+      } else if (op1_type === OperandType.HighRegister && (op2_type === OperandType.HexInmediate || op2_type === OperandType.DecInmediate)) {
+        return "Only low registers allowed with inmediate operand";
+      } else if (op2_type === OperandType.HexInmediate || op2_type === OperandType.DecInmediate) {
+        // ADD only allows 8-bit inmediate values for low registers and 7-bit inmediate values for the sp register
+        if (parseInt(operands[1].slice(1)) > 255) {
+          return "Invalid inmediate value. Inmediate value for ADD must be between 0 and 255";
+        }
+      }
+
+      if (operands.length === 3) {
+        return "TODO: ADD with 3 operands";
+      }
+
+      return {
+        operation: operation,
+        operands: [ { type: op1_type, value: operands[0] }, { type: op2_type, value: operands[1] } ],
+      };
+
+    } break;
 
     default:
       console.log("[compiler] Unreachable code in line_to_op");
@@ -145,4 +180,4 @@ function compile_assembly(source: string): Program {
 }
 
 export default compile_assembly;
-export { Instruction, Operation, OperandType };
+export { Instruction, Operation, OperandType, assert };
