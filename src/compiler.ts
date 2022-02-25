@@ -174,7 +174,33 @@ function line_to_op(line: string): Instruction | string {
       }
 
       if (operands.length === 3) {
-        return 'TODO: ADD with 3 operands';
+        // If exists a third operand for ADD it must be a #3bit_Imm. ADD r1, r2, #3bit_Imm
+        if (op1Type !== OperandType.LowRegister || op2Type !== OperandType.LowRegister) {
+          return "Only low registers allowed with inmediate operand";
+        }
+
+        const op3Type = operand_to_optype(operands[2]);
+        if (op1Type !== OperandType.LowRegister || op2Type !== OperandType.LowRegister) {
+          return 'Invalid operands for ADD. Expected add r1, r2 [, #3bit_Imm]';
+        } else if (typeof op3Type === 'string') {
+          return op3Type;
+        } else if (op3Type !== OperandType.DecInmediate && op3Type !== OperandType.HexInmediate) {
+          return 'Invalid operand for ADD. Expected add r1, r2 [, #3bit_Imm]';
+        } else if (op3Type === OperandType.DecInmediate || op3Type === OperandType.HexInmediate) {
+          const radix = op3Type === OperandType.HexInmediate ? 16 : 10;
+          if (parseInt(operands[2].slice(1), radix) > 7) {
+            return 'Invalid inmediate value. Inmediate value for ADD with 3 operands must be between 0 and 7';
+          }
+        }
+
+        return {
+          operation,
+          operands: [
+            { type: op1Type, value: operands[0] },
+            { type: op2Type, value: operands[1] },
+            { type: op3Type, value: operands[2] },
+          ],
+        };
       }
 
       return {

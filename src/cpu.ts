@@ -98,14 +98,17 @@ function defaultCPU(): armCPU_T {
         case Operation.ADD:
           {
             // TODO: Add support for other types of registers (pc, sp)
-            const [op1, op2] = ins.operands;
+            const [op1, op2, op3] = ins.operands;
+            const extraAdd = op3 !== undefined ? (
+              op3.type === OperandType.HexInmediate ? parseInt(op3.value.slice(1), 16) : parseInt(op3.value.slice(1), 10)
+            ) : 0;
 
             if (op2.type === OperandType.LowRegister || op2.type === OperandType.HighRegister) {
-              this.regs[op1.value] += this.regs[op2.value];
+              this.regs[op1.value] += this.regs[op2.value] + extraAdd;
             } else if (op2.type === OperandType.HexInmediate || op2.type === OperandType.DecInmediate) {
               const radix = op2.type === OperandType.HexInmediate ? 16 : 10;
               const value = parseInt(op2.value.slice(1), radix);
-              this.regs[op1.value] += value;
+              this.regs[op1.value] += value + extraAdd;
             } else {
               throw new Error('Invalid operand type for ADD. This should never happen.');
             }
