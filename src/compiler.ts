@@ -66,7 +66,7 @@ function strip_empty_lines(source: string) {
 }
 
 function clean_input(source: string): string {
-  return strip_empty_lines(strip_comments(source));
+  return strip_empty_lines(strip_comments(source)).toLowerCase();
 }
 
 function operand_to_optype(operand: string): OperandType | string {

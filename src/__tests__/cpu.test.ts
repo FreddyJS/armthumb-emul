@@ -37,6 +37,7 @@ test('MOV', () => {
 
   // Compile, load and run the assembly in the CPU
   const program = compile_assembly(asm);
+  expect(program.error).toBeUndefined();
   cpu.load(program.ins);
   cpu.run();
 
@@ -69,6 +70,7 @@ test('ADD', () => {
 
   // Compile, load and run the assembly in the CPU
   const program = compile_assembly(asm);
+  expect(program.error).toBeUndefined();
   cpu.load(program.ins);
   cpu.run();
 
