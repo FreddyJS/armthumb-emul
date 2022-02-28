@@ -10,4 +10,7 @@
   add r9, r8     ; r9 = 8
   add r9, r9     ; r9 = 16
   add r9, r2     ; r9 = 20
+  add sp, #3     ; sp = 3
+  add sp, #0xf   ; sp = 18
+  add sp, #-2    ; sp = 16
   ; r0 = 17, r1 = 17, r2 = 4, r3 = 5, r8 = 8, r9 = 20

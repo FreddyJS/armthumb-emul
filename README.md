@@ -19,3 +19,15 @@ ADD | Low Register (Rd) | #8bit_Imm |         | Rd = Rd + #8bit_Imm
 ADD | Register (Rd) | Register (Rs) |         | Rd = Rd + Rs
 ADD | Register (Rd) | Register (Rs) |         | Rd = Rd + Rs
 ADD | Low Register (Rd) | Low Register (Rs) | #3bit_Imm | Rd = Rd + Rs
+ADD | Stack Pointer (Sp) | #7bit_Imm |  | Sp = Sp + #7bit_Imm
+
+## Testing
+Each instruction is tested using an assembly code compiled by a gcc compiler and test with `qemu-arm`.  
+To update the tests when running locally and **not** using --ci the test suite will automatically create a .json.tmp file.  
+By removing the .tmp extension the file will be the expected output on the next tests.
+
+## Setup the crosscompiler and qemu
+```sh
+sudo apt-get install gcc-arm-linux-gnueabihf
+sudo apt install qemu-user
+```

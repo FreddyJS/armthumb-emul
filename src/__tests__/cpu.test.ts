@@ -10,14 +10,8 @@ process.argv.forEach((arg) => {
   }
 });
 
-function dumpState(cpu: armCPU_T, file: string) {
-  const state = {
-    regs: cpu.regs,
-    memory: cpu.memory.every((v) => v === 0) ? undefined : cpu.memory,
-    stack: cpu.stack.every((v) => v === 0) ? undefined : cpu.stack,
-  };
-
-  fs.writeFileSync(file, JSON.stringify(state, null, 2));
+function dumpCPU(cpu: armCPU_T, file: string) {
+  fs.writeFileSync(file, JSON.stringify(cpu, null, 2));
 }
 
 test('MOV', () => {
@@ -43,10 +37,10 @@ test('MOV', () => {
 
   if (expected !== undefined) {
     const state = JSON.parse(expected);
-    expect(JSON.stringify(cpu.regs)).toBe(JSON.stringify(state.regs));
+    expect(JSON.stringify(cpu)).toBe(JSON.stringify(state));
   } else {
     // In CI we already failed the test if expected output is not found
-    dumpState(cpu, ASM_DIR + `${test_name}.S.json.tmp`);
+    dumpCPU(cpu, ASM_DIR + `${test_name}.S.json.tmp`);
     console.log(`No expected output saved for '${test_name}.S'. Dumping state to ${ASM_DIR}${test_name}.S.json.tmp`);
     console.log(`Expected state dumped. Remove the .tmp if everything is ok.`);
     expect(expected).toBeDefined();
@@ -76,10 +70,10 @@ test('ADD', () => {
 
   if (expected !== undefined) {
     const state = JSON.parse(expected);
-    expect(JSON.stringify(cpu.regs)).toBe(JSON.stringify(state.regs));
+    expect(JSON.stringify(cpu)).toBe(JSON.stringify(state));
   } else {
     // In CI we already failed the test if expected output is not found
-    dumpState(cpu, ASM_DIR + `${test_name}.S.json.tmp`);
+    dumpCPU(cpu, ASM_DIR + `${test_name}.S.json.tmp`);
     console.log(`No expected output saved for '${test_name}.S'. Dumping state to ${ASM_DIR}${test_name}.S.json.tmp`);
     console.log(`Expected state dumped. Remove the .tmp if everything is ok.`);
     expect(expected).toBeDefined();

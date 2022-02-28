@@ -16,5 +16,327 @@
     "r13": 0,
     "r14": 0,
     "r15": 0
-  }
+  },
+  "pc": 0,
+  "sp": 16,
+  "memory": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "stack": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "program": [
+    {
+      "operation": 1,
+      "operands": [
+        {
+          "type": 0,
+          "value": "r0"
+        },
+        {
+          "type": 4,
+          "value": "#2"
+        }
+      ]
+    },
+    {
+      "operation": 1,
+      "operands": [
+        {
+          "type": 0,
+          "value": "r0"
+        },
+        {
+          "type": 3,
+          "value": "#0xf"
+        }
+      ]
+    },
+    {
+      "operation": 1,
+      "operands": [
+        {
+          "type": 0,
+          "value": "r1"
+        },
+        {
+          "type": 0,
+          "value": "r0"
+        }
+      ]
+    },
+    {
+      "operation": 1,
+      "operands": [
+        {
+          "type": 0,
+          "value": "r2"
+        },
+        {
+          "type": 3,
+          "value": "#0x2"
+        }
+      ]
+    },
+    {
+      "operation": 1,
+      "operands": [
+        {
+          "type": 0,
+          "value": "r2"
+        },
+        {
+          "type": 0,
+          "value": "r2"
+        }
+      ]
+    },
+    {
+      "operation": 1,
+      "operands": [
+        {
+          "type": 0,
+          "value": "r3"
+        },
+        {
+          "type": 0,
+          "value": "r2"
+        },
+        {
+          "type": 4,
+          "value": "#1"
+        }
+      ]
+    },
+    {
+      "operation": 1,
+      "operands": [
+        {
+          "type": 1,
+          "value": "r8"
+        },
+        {
+          "type": 0,
+          "value": "r2"
+        }
+      ]
+    },
+    {
+      "operation": 1,
+      "operands": [
+        {
+          "type": 1,
+          "value": "r8"
+        },
+        {
+          "type": 1,
+          "value": "r8"
+        }
+      ]
+    },
+    {
+      "operation": 1,
+      "operands": [
+        {
+          "type": 1,
+          "value": "r9"
+        },
+        {
+          "type": 1,
+          "value": "r8"
+        }
+      ]
+    },
+    {
+      "operation": 1,
+      "operands": [
+        {
+          "type": 1,
+          "value": "r9"
+        },
+        {
+          "type": 1,
+          "value": "r9"
+        }
+      ]
+    },
+    {
+      "operation": 1,
+      "operands": [
+        {
+          "type": 1,
+          "value": "r9"
+        },
+        {
+          "type": 0,
+          "value": "r2"
+        }
+      ]
+    },
+    {
+      "operation": 1,
+      "operands": [
+        {
+          "type": 2,
+          "value": "sp"
+        },
+        {
+          "type": 4,
+          "value": "#3"
+        }
+      ]
+    },
+    {
+      "operation": 1,
+      "operands": [
+        {
+          "type": 2,
+          "value": "sp"
+        },
+        {
+          "type": 3,
+          "value": "#0xf"
+        }
+      ]
+    },
+    {
+      "operation": 1,
+      "operands": [
+        {
+          "type": 2,
+          "value": "sp"
+        },
+        {
+          "type": 4,
+          "value": "#-2"
+        }
+      ]
+    }
+  ]
 }
