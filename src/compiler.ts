@@ -137,7 +137,7 @@ function lineToInstruction(line: string): Instruction | string {
 
       if (isGeneralRegisterType(op1Type)) {
         if (isGeneralRegisterType(op2Type)) {
-          // Both registers are general registers (high or low). Able to move between them.
+          // CASE: MOV r1, r2
           return {
             operation: Operation.MOV,
             operands: [
@@ -156,6 +156,7 @@ function lineToInstruction(line: string): Instruction | string {
             return 'Invalid register for MOV. Only low registers are allowed with inmediate values';
           }
 
+          // CASE: MOV r1, #0xFF
           return {
             operation: Operation.MOV,
             operands: [
@@ -163,6 +164,8 @@ function lineToInstruction(line: string): Instruction | string {
               { type: op2Type, value: operands[1] },
             ],
           };
+        } else {
+          return 'Invalid operand for MOV. Expected r[0-7] or #[0-9a-fA-F] but got ' + operands[1];
         }
       } else {
         return 'Invalid operand for MOV. Expected r[0-7] or r[8-15] but got ' + operands[0];
@@ -207,16 +210,18 @@ function lineToInstruction(line: string): Instruction | string {
             } else {
               return 'Invalid operand for ADD. Expected r[0-7] or r[8-15] but got ' + operands[2];
             }
+          } else if (operands.length === 2) {
+            // CASE: ADD r1, r2
+            return {
+              operation: Operation.ADD,
+              operands: [
+                { type: op1Type, value: operands[0] },
+                { type: op2Type, value: operands[1] },
+              ],
+            };
+          } else {
+            return 'Invalid number of operands for ADD. Expected 2 or 3, got ' + operands.length;
           }
-
-          // CASE: ADD r1, r2
-          return {
-            operation: Operation.ADD,
-            operands: [
-              { type: op1Type, value: operands[0] },
-              { type: op2Type, value: operands[1] },
-            ],
-          };
         } else if (isInmediateType(op2Type)) {
           const radix = op2Type === OperandType.HexInmediate ? 16 : 10;
           if (parseInt(operands[1].slice(1), radix) > 255) {
