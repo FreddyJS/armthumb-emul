@@ -11,6 +11,8 @@ The ARM Thumb has access to the 16 32-bits registers from `r0` to `r15`.
 
 ## Supported Operations
 [Instructions Reference](https://developer.arm.com/documentation/ddi0210/c/Introduction/Instruction-set-summary/Thumb-instruction-summary?lang=en)  
+If not specified the low and high registers can be used together on a operation.  
+
 Operation | Operand 1 | Operand 2 | Operand 3| Signature 
 |  :---:  |   :---    |   :---    |   :---    |  :---   |
 MOV | Low Register (Rd) | #8bit_Imm |         | Ld = #8bit_Imm
