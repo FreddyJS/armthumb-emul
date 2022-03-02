@@ -15,6 +15,11 @@ const wordToOperation: { [key: string]: Operation } = {
   add: Operation.ADD,
 };
 
+const operationToWord: { [key: number]: string } = {
+  [Operation.MOV]: 'mov',
+  [Operation.ADD]: 'add',
+};
+
 enum OperandType {
   LowRegister,
   HighRegister,
@@ -167,7 +172,7 @@ function lineToInstruction(line: string): Instruction | string {
     }
 
     case Operation.ADD: {
-      if (operands.length != 2 && operands.length != 3) {
+      if (operands.length !== 2 && operands.length !== 3) {
         return 'Invalid number of operands for ADD';
       }
 
@@ -322,10 +327,11 @@ function compile_assembly(source: string): Program {
   dataSection = cleanInput(dataSection);
 
   const program: Program = compile_text_section(textSection);
+  void(dataSection);
 
   return program;
 }
 
 export default compile_assembly;
-export { Operation, OperandType, assert };
+export { Operation, OperandType, assert, wordToOperation, operationToWord };
 export type { Instruction };
