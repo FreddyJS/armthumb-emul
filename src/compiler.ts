@@ -26,7 +26,6 @@ enum OperandType {
 type CompilerError = {
   message: string;
   line: number;
-  column: number;
 };
 
 type Operand = {
@@ -37,6 +36,7 @@ type Operand = {
 type Instruction = {
   operation: Operation;
   operands: Operand[];
+  label?: string;
 };
 
 type Program = {
@@ -259,13 +259,48 @@ function lineToInstruction(line: string): Instruction | string {
   }
 }
 
-function compile_assembly(source: string): Program {
-  source = cleanInput(source);
+function compile_text_section(textSection: string): Program {
+  const lines = textSection.split('\n');
+  const program: Program = {
+    error: undefined,
+    ins: [],
+  };
 
+  for (let i = 0; i < lines.length; i++) {
+    let line = lines[i];
+    let label = undefined;
+    if (/^\w+:/.test(line)) {
+      // A label exists in this line
+      label = line.split(':')[0];
+      line = line.slice(label.length + 1).trim();
+      if (line.length === 0) {
+        // The line is just a label, parse next line
+        line = lines[++i];
+      }
+    }
+
+    const op = lineToInstruction(line);
+    if (typeof op === 'string') {
+      program.error = {
+        line: i,
+        message: op,
+      };
+
+      return program;
+    } else {
+      op.label = label;
+      program.ins.push(op);
+    }
+  }
+
+  return program;
+}
+
+function compile_assembly(source: string): Program {
   const textSectionIndex = source.indexOf('.text');
   const dataSectionIndex = source.indexOf('.data');
   if (textSectionIndex === -1) {
-    return { error: { message: 'Missing .text directive', line: 0, column: 0 }, ins: [] };
+    return { error: { message: 'Missing .text directive', line: 0 }, ins: [] };
   }
 
   let textSection = '';
@@ -283,25 +318,10 @@ function compile_assembly(source: string): Program {
     dataSection = source.slice(dataSectionIndex + 5);
   }
 
-  const lines = textSection.split('\n');
-  const program: Program = {
-    ins: [],
-  };
+  textSection = cleanInput(textSection);
+  dataSection = cleanInput(dataSection);
 
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i];
-    if (line.length === 0) {
-      continue;
-    }
-
-    const op = lineToInstruction(line);
-    if (typeof op === 'string') {
-      program.error = { message: op, line: i, column: 0 };
-      return program;
-    } else {
-      program.ins.push(op);
-    }
-  }
+  const program: Program = compile_text_section(textSection);
 
   return program;
 }
