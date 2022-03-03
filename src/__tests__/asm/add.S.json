@@ -1,15 +1,15 @@
 {
   "regs": {
-    "r0": 17,
-    "r1": 17,
-    "r2": 4,
-    "r3": 5,
+    "r0": 519,
+    "r1": 256,
+    "r2": 1532,
+    "r3": 2076,
     "r4": 0,
     "r5": 0,
     "r6": 0,
     "r7": 0,
-    "r8": 8,
-    "r9": 20,
+    "r8": 1038,
+    "r9": 2076,
     "r10": 0,
     "r11": 0,
     "r12": 0,
@@ -18,7 +18,7 @@
     "r15": 0
   },
   "pc": 0,
-  "sp": 16,
+  "sp": 512,
   "cpsr": 0,
   "memory": [
     0,
@@ -161,8 +161,12 @@
           "value": "r0"
         },
         {
+          "type": 0,
+          "value": "r1"
+        },
+        {
           "type": 4,
-          "value": "#2"
+          "value": "#7"
         }
       ]
     },
@@ -171,11 +175,11 @@
       "operands": [
         {
           "type": 0,
-          "value": "r0"
+          "value": "r1"
         },
         {
-          "type": 3,
-          "value": "#0xf"
+          "type": 4,
+          "value": "#1"
         }
       ]
     },
@@ -188,6 +192,70 @@
         },
         {
           "type": 0,
+          "value": "r1"
+        },
+        {
+          "type": 4,
+          "value": "#255"
+        }
+      ]
+    },
+    {
+      "operation": 1,
+      "operands": [
+        {
+          "type": 0,
+          "value": "r0"
+        },
+        {
+          "type": 0,
+          "value": "r1"
+        }
+      ]
+    },
+    {
+      "operation": 1,
+      "operands": [
+        {
+          "type": 0,
+          "value": "r0"
+        },
+        {
+          "type": 0,
+          "value": "r0"
+        },
+        {
+          "type": 0,
+          "value": "r1"
+        }
+      ]
+    },
+    {
+      "operation": 1,
+      "operands": [
+        {
+          "type": 1,
+          "value": "r8"
+        },
+        {
+          "type": 0,
+          "value": "r0"
+        }
+      ]
+    },
+    {
+      "operation": 1,
+      "operands": [
+        {
+          "type": 1,
+          "value": "r8"
+        },
+        {
+          "type": 1,
+          "value": "r8"
+        },
+        {
+          "type": 0,
           "value": "r0"
         }
       ]
@@ -197,24 +265,11 @@
       "operands": [
         {
           "type": 0,
-          "value": "r2"
+          "value": "r3"
         },
         {
-          "type": 3,
-          "value": "#0x2"
-        }
-      ]
-    },
-    {
-      "operation": 1,
-      "operands": [
-        {
-          "type": 0,
-          "value": "r2"
-        },
-        {
-          "type": 0,
-          "value": "r2"
+          "type": 1,
+          "value": "r8"
         }
       ]
     },
@@ -227,11 +282,11 @@
         },
         {
           "type": 0,
-          "value": "r2"
+          "value": "r3"
         },
         {
-          "type": 4,
-          "value": "#1"
+          "type": 1,
+          "value": "r8"
         }
       ]
     },
@@ -240,102 +295,75 @@
       "operands": [
         {
           "type": 1,
-          "value": "r8"
+          "value": "r9"
         },
+        {
+          "type": 1,
+          "value": "r8"
+        }
+      ]
+    },
+    {
+      "operation": 1,
+      "operands": [
+        {
+          "type": 1,
+          "value": "r9"
+        },
+        {
+          "type": 1,
+          "value": "r9"
+        },
+        {
+          "type": 1,
+          "value": "r8"
+        }
+      ]
+    },
+    {
+      "operation": 1,
+      "operands": [
+        {
+          "type": 2,
+          "value": "sp"
+        },
+        {
+          "type": 4,
+          "value": "#4"
+        }
+      ]
+    },
+    {
+      "operation": 1,
+      "operands": [
+        {
+          "type": 2,
+          "value": "sp"
+        },
+        {
+          "type": 2,
+          "value": "sp"
+        },
+        {
+          "type": 4,
+          "value": "#508"
+        }
+      ]
+    },
+    {
+      "operation": 1,
+      "operands": [
         {
           "type": 0,
           "value": "r2"
-        }
-      ]
-    },
-    {
-      "operation": 1,
-      "operands": [
-        {
-          "type": 1,
-          "value": "r8"
         },
-        {
-          "type": 1,
-          "value": "r8"
-        }
-      ]
-    },
-    {
-      "operation": 1,
-      "operands": [
-        {
-          "type": 1,
-          "value": "r9"
-        },
-        {
-          "type": 1,
-          "value": "r8"
-        }
-      ]
-    },
-    {
-      "operation": 1,
-      "operands": [
-        {
-          "type": 1,
-          "value": "r9"
-        },
-        {
-          "type": 1,
-          "value": "r9"
-        }
-      ]
-    },
-    {
-      "operation": 1,
-      "operands": [
-        {
-          "type": 1,
-          "value": "r9"
-        },
-        {
-          "type": 0,
-          "value": "r2"
-        }
-      ]
-    },
-    {
-      "operation": 1,
-      "operands": [
         {
           "type": 2,
           "value": "sp"
         },
         {
           "type": 4,
-          "value": "#3"
-        }
-      ]
-    },
-    {
-      "operation": 1,
-      "operands": [
-        {
-          "type": 2,
-          "value": "sp"
-        },
-        {
-          "type": 3,
-          "value": "#0xf"
-        }
-      ]
-    },
-    {
-      "operation": 1,
-      "operands": [
-        {
-          "type": 2,
-          "value": "sp"
-        },
-        {
-          "type": 4,
-          "value": "#-2"
+          "value": "#1020"
         }
       ]
     }
