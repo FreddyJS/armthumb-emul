@@ -72,13 +72,6 @@ function stripComments(source: string) {
     .join('\n');
 }
 
-function stripEmptyLines(source: string) {
-  return source
-    .split('\n')
-    .filter((line) => line.length > 0)
-    .join('\n');
-}
-
 function cleanInput(source: string): string {
   return stripComments(source).toLowerCase();
 }
@@ -172,7 +165,7 @@ function lineToInstruction(line: string): Instruction | string {
       if (operands.length === 2) {
         // ADD SHORT FORM
         switch (op1Type) {
-          case OperandType.LowRegister: {
+          case OperandType.LowRegister:
             if (!isInmediateVal(op2Type) && !isGeneralReg(op2Type) && op2Type !== OperandType.SpRegister) {
               return 'Invalid operand 2 for ADD. Expected #Inm, r[0-15] or sp, got ' + operands[1];
             } else if (isInmediateVal(op2Type)) {
@@ -191,9 +184,8 @@ function lineToInstruction(line: string): Instruction | string {
                 { type: op2Type, value: operands[1] },
               ],
             };
-          };
 
-          case OperandType.HighRegister: {
+          case OperandType.HighRegister:
             if (!isGeneralReg(op2Type) && op2Type !== OperandType.SpRegister) {
               return 'Invalid operand 2 for ADD. Expected r[0-15] or sp, got ' + operands[1];
             }
@@ -205,9 +197,8 @@ function lineToInstruction(line: string): Instruction | string {
                 { type: op2Type, value: operands[1] },
               ],
             };
-          };
 
-          case OperandType.SpRegister: {
+          case OperandType.SpRegister:
             if (!isInmediateVal(op2Type) && !isGeneralReg(op2Type)) {
               return 'Invalid operand 2 for ADD. Expected r[0-15] or #Inm, got ' + operands[1];
             } else if (isInmediateVal(op2Type)) {
@@ -228,11 +219,9 @@ function lineToInstruction(line: string): Instruction | string {
                 { type: op2Type, value: operands[1] },
               ],
             };
-          };
 
-          default: {
+          default:
             return 'Invalid operand 1 for ADD. Expected r[0-15] or sp, got ' + operands[0];
-          }
         }
       } else {
         // ADD LONG FORM
@@ -248,7 +237,7 @@ function lineToInstruction(line: string): Instruction | string {
 
         // op1Type and op2Type are registers, op3Type is an inmediate
         switch (op1Type) {
-          case OperandType.LowRegister: {
+          case OperandType.LowRegister:
             if (op2Type === OperandType.LowRegister) {
               if (isInmediateVal(op3Type)) {
                 const radix = op3Type === OperandType.HexInmediate ? 16 : 10;
@@ -283,9 +272,8 @@ function lineToInstruction(line: string): Instruction | string {
                 { type: op3Type, value: operands[2] },
               ],
             };
-          };
 
-          case OperandType.HighRegister: {
+          case OperandType.HighRegister:
             if (!isGeneralReg(op2Type) && op2Type !== OperandType.SpRegister) {
               return 'Invalid operand 2 for ADD. Expected r[0-15] or sp, got ' + operands[1];
             } else if (!isGeneralReg(op3Type)) {
@@ -300,9 +288,8 @@ function lineToInstruction(line: string): Instruction | string {
                 { type: op3Type, value: operands[2] },
               ],
             };
-          };
 
-          case OperandType.SpRegister: {
+          case OperandType.SpRegister:
             if (!isGeneralReg(op2Type) && op2Type !== OperandType.SpRegister) {
               return 'Invalid operand 2 for ADD. Expected r[0-15] or sp, got ' + operands[1];
             } else if (isInmediateVal(op3Type)) {
@@ -323,11 +310,9 @@ function lineToInstruction(line: string): Instruction | string {
                 { type: op3Type, value: operands[2] },
               ],
             };
-          };
 
-          default: {
+          default:
             return 'Invalid operand 1 for ADD. Expected r[0-15] or sp, got ' + operands[0];
-          }
         }
       }
     }
