@@ -110,14 +110,26 @@ function defaultCPU(): armCPU_T {
             // TODO: Add support for other types of registers (pc, sp)
             const [op1, op2, op3] = ins.operands;
             const destReg = op1.value;
-            const sum1 = op3 === undefined ? this.regs[destReg] : op2.type === OperandType.SpRegister ? this.sp : this.regs[op2.value];
-            const sum2 = op3 === undefined ?
-              op2.type === OperandType.HexInmediate || op2.type === OperandType.DecInmediate ?
-                parseInt(op2.value.slice(1), op2.type === OperandType.HexInmediate ? 16 : 10) :
-                op2.type === OperandType.SpRegister ? this.sp : this.regs[op2.value] :
-              op3.type === OperandType.HexInmediate || op3.type === OperandType.DecInmediate ?
-                parseInt(op3.value.slice(1), op3.type === OperandType.HexInmediate ? 16 : 10) :
-                op3.type === OperandType.SpRegister ? this.sp : this.regs[op3.value];
+
+            const sum1 =
+              op3 === undefined
+                ? this.regs[destReg]
+                : op2.type === OperandType.SpRegister
+                ? this.sp
+                : this.regs[op2.value];
+
+            const sum2 =
+              op3 === undefined
+                ? op2.type === OperandType.HexInmediate || op2.type === OperandType.DecInmediate
+                  ? parseInt(op2.value.slice(1), op2.type === OperandType.HexInmediate ? 16 : 10)
+                  : op2.type === OperandType.SpRegister
+                  ? this.sp
+                  : this.regs[op2.value]
+                : op3.type === OperandType.HexInmediate || op3.type === OperandType.DecInmediate
+                ? parseInt(op3.value.slice(1), op3.type === OperandType.HexInmediate ? 16 : 10)
+                : op3.type === OperandType.SpRegister
+                ? this.sp
+                : this.regs[op3.value];
 
             if (destReg === 'sp') {
               this.sp += sum2;
@@ -133,11 +145,13 @@ function defaultCPU(): armCPU_T {
     },
     set_flag(flag: Flags, value: boolean) {
       if (value) {
+        // tslint:disable-next-line:no-bitwise
         this.cpsr |= flag;
       } else {
+        // tslint:disable-next-line:no-bitwise
         this.cpsr &= ~flag;
       }
-    }
+    },
   };
 
   return armCPU;

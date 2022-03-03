@@ -229,9 +229,16 @@ function lineToInstruction(line: string): Instruction | string {
 
         if (op3Type === undefined) {
           return 'Invalid operand 3 for ADD. Expected register or #Inm, got ' + operands[2];
-        } else if ((op1Type === OperandType.HighRegister || op2Type === OperandType.HighRegister) && isInmediateVal(op3Type)) {
+        } else if (
+          (op1Type === OperandType.HighRegister || op2Type === OperandType.HighRegister) &&
+          isInmediateVal(op3Type)
+        ) {
           return 'Invalid register for ADD. Only low registers are allowed with inmediate values';
-        } else if ((isGeneralReg(op3Type) || op3Type === OperandType.SpRegister) && operands[0] !== operands[1] && operands[0] !== operands[2]) {
+        } else if (
+          (isGeneralReg(op3Type) || op3Type === OperandType.SpRegister) &&
+          operands[0] !== operands[1] &&
+          operands[0] !== operands[2]
+        ) {
           return 'Destiny must overlap one source register';
         }
 
@@ -335,7 +342,7 @@ function compile_text_section(textSection: string): Program {
       continue;
     }
 
-    let label = undefined;
+    let label = '';
     if (/^\w+:/.test(line)) {
       // A label exists in this line
       label = line.split(':')[0];
@@ -389,7 +396,7 @@ function compile_assembly(source: string): Program {
   dataSection = cleanInput(dataSection);
 
   const program: Program = compile_text_section(textSection);
-  void(dataSection);
+  void dataSection;
 
   return program;
 }
