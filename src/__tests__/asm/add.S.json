@@ -4,13 +4,13 @@
     "r1": 256,
     "r2": 1532,
     "r3": 2076,
-    "r4": 0,
+    "r4": 1024,
     "r5": 0,
     "r6": 0,
     "r7": 0,
     "r8": 1038,
     "r9": 2076,
-    "r10": 0,
+    "r10": 1024,
     "r11": 0,
     "r12": 0,
     "r13": 0,
@@ -364,6 +364,66 @@
         {
           "type": 4,
           "value": "#1020"
+        }
+      ]
+    },
+    {
+      "operation": 1,
+      "operands": [
+        {
+          "type": 0,
+          "value": "r4"
+        },
+        {
+          "type": 2,
+          "value": "sp"
+        }
+      ]
+    },
+    {
+      "operation": 1,
+      "operands": [
+        {
+          "type": 0,
+          "value": "r4"
+        },
+        {
+          "type": 0,
+          "value": "r4"
+        },
+        {
+          "type": 2,
+          "value": "sp"
+        }
+      ]
+    },
+    {
+      "operation": 1,
+      "operands": [
+        {
+          "type": 1,
+          "value": "r10"
+        },
+        {
+          "type": 2,
+          "value": "sp"
+        }
+      ]
+    },
+    {
+      "operation": 1,
+      "operands": [
+        {
+          "type": 1,
+          "value": "r10"
+        },
+        {
+          "type": 2,
+          "value": "sp"
+        },
+        {
+          "type": 1,
+          "value": "r10"
         }
       ]
     }
