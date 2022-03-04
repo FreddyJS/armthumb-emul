@@ -1,14 +1,29 @@
 import compile_assembly from '../compiler';
 import defaultCPU, { armCPU_T } from '../cpu';
 
-const fs = require('fs');
 const ASM_DIR = __dirname + '/asm/';
+
+var exec = require('child_process').execSync;
+const fs = require('fs');
+
 let ci = false;
 process.argv.forEach((arg) => {
   if (arg === '--ci') {
     ci = true;
   }
 });
+
+function checkWithCrosscompiler(file: string) {
+  // Using arm-linux-gnueabihf-as to compile the assembly
+  const cmd = `arm-linux-gnueabihf-as -mthumb -o ${file.replace(".S", ".o")} ${file}`;
+
+  try {
+    exec(cmd, {encoding: 'utf-8'} );
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
 
 function dumpCPU(cpu: armCPU_T, file: string) {
   fs.writeFileSync(file, JSON.stringify(cpu, null, 2));
@@ -17,7 +32,7 @@ function dumpCPU(cpu: armCPU_T, file: string) {
 test('MOV', () => {
   // Load the assembly and expected output
   const test_name = expect.getState().currentTestName.toLowerCase();
-  const cpu = defaultCPU();
+  const cpu = defaultCPU({memorySize: 0, stackSize: 0});
   const asm = fs.readFileSync(ASM_DIR + `${test_name}.S`, 'utf8');
   let expected = undefined;
   try {
@@ -30,9 +45,10 @@ test('MOV', () => {
   }
 
   // Compile, load and run the assembly in the CPU
+  expect(checkWithCrosscompiler(ASM_DIR + `${test_name}.S`)).toBe(true);
   const program = compile_assembly(asm);
   expect(program.error).toBeUndefined();
-  cpu.load(program.ins);
+  cpu.load(program);
   cpu.run();
 
   if (expected !== undefined) {
@@ -50,7 +66,7 @@ test('MOV', () => {
 test('ADD', () => {
   // Load the assembly and expected output
   const test_name = expect.getState().currentTestName.toLowerCase();
-  const cpu = defaultCPU();
+  const cpu = defaultCPU({memorySize: 0, stackSize: 0});
   const asm = fs.readFileSync(ASM_DIR + `${test_name}.S`, 'utf8');
   let expected = undefined;
   try {
@@ -63,9 +79,10 @@ test('ADD', () => {
   }
 
   // Compile, load and run the assembly in the CPU
+  expect(checkWithCrosscompiler(ASM_DIR + `${test_name}.S`)).toBe(true);
   const program = compile_assembly(asm);
   expect(program.error).toBeUndefined();
-  cpu.load(program.ins);
+  cpu.load(program);
   cpu.run();
 
   if (expected !== undefined) {
@@ -83,7 +100,7 @@ test('ADD', () => {
 test('LABELS', () => {
   // Load the assembly and expected output
   const test_name = expect.getState().currentTestName.toLowerCase();
-  const cpu = defaultCPU();
+  const cpu = defaultCPU({memorySize: 0, stackSize: 0});
   const asm = fs.readFileSync(ASM_DIR + `${test_name}.S`, 'utf8');
   let expected = undefined;
   try {
@@ -96,9 +113,10 @@ test('LABELS', () => {
   }
 
   // Compile, load and run the assembly in the CPU
+  expect(checkWithCrosscompiler(ASM_DIR + `${test_name}.S`)).toBe(true);
   const program = compile_assembly(asm);
   expect(program.error).toBeUndefined();
-  cpu.load(program.ins);
+  cpu.load(program);
   cpu.run();
 
   if (expected !== undefined) {
