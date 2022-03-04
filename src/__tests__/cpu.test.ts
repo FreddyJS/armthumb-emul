@@ -16,9 +16,10 @@ process.argv.forEach((arg) => {
 function checkWithCrosscompiler(file: string) {
   // Using arm-linux-gnueabihf-as to compile the assembly
   const cmd = `arm-linux-gnueabihf-as -mthumb -o ${file.replace(".S", ".o")} ${file}`;
+  const options = {stdio : 'pipe', encoding: 'utf-8'};
 
   try {
-    exec(cmd, {encoding: 'utf-8'} );
+    exec(cmd, options);
     return true;
   } catch (e) {
     return false;
