@@ -1,60 +1,17 @@
+import { Operation, OperandType, wordToOperation } from './types';
+import type { Program, Instruction } from './types';
+
 const assert = (condition: boolean, message: string) => {
   if (!condition) {
     throw new Error(message);
   }
 };
 
-enum Operation {
-  MOV,
-  ADD,
-  TOTAL_OPERATIONS,
-}
-
-const wordToOperation: { [key: string]: Operation } = {
-  mov: Operation.MOV,
-  add: Operation.ADD,
-};
-
-const operationToWord: { [key: number]: string } = {
-  [Operation.MOV]: 'mov',
-  [Operation.ADD]: 'add',
-};
-
-enum OperandType {
-  LowRegister,
-  HighRegister,
-  SpRegister,
-  HexInmediate,
-  DecInmediate,
-}
-
-type CompilerError = {
-  message: string;
-  line: number;
-};
-
-type Operand = {
-  type: OperandType;
-  value: string;
-};
-
-type Instruction = {
-  operation: Operation;
-  name: string;
-  operands: Operand[];
-  label?: string;
-};
-
-type Program = {
-  error?: CompilerError;
-  ins: Instruction[];
-};
-
-function isGeneralReg(type: OperandType): boolean {
+function isLowHighRegister(type: OperandType): boolean {
   return type === OperandType.LowRegister || type === OperandType.HighRegister;
 }
 
-function isInmediateVal(type: OperandType): boolean {
+function isInmediateValue(type: OperandType): boolean {
   return type === OperandType.HexInmediate || type === OperandType.DecInmediate;
 }
 
@@ -93,10 +50,10 @@ function cleanInput(source: string): string {
 
 function operandToOptype(operand: string): OperandType | undefined {
   // Check by regular expressions the corresponding operand type. If none is found, return undefined.
-  let type: OperandType | undefined = undefined;
+  let type: OperandType | undefined;
 
   if (/^r\d+$/.test(operand)) {
-    const reg = parseInt(operand.slice(1));
+    const reg = parseInt(operand.slice(1), 10);
     type = reg < 8 ? OperandType.LowRegister : reg < 16 ? OperandType.HighRegister : undefined;
   } else if (/^sp$/.test(operand)) {
     type = OperandType.SpRegister;
@@ -130,13 +87,13 @@ function lineToInstruction(line: string): Instruction | string {
       const op1Type = operandToOptype(args[0]);
       const op2Type = operandToOptype(args[1]);
 
-      if (op1Type === undefined || !isGeneralReg(op1Type)) {
+      if (op1Type === undefined || !isLowHighRegister(op1Type)) {
         return 'Invalid operand 1 for MOV. Expected register, got ' + args[0];
-      } else if (op2Type === undefined || (!isGeneralReg(op2Type) && !isInmediateVal(op2Type))) {
+      } else if (op2Type === undefined || (!isLowHighRegister(op2Type) && !isInmediateValue(op2Type))) {
         return 'Invalid operand 2 for MOV. Expected register or #8bit_Inm, got ' + args[1];
       }
 
-      if (isInmediateVal(op2Type)) {
+      if (isInmediateValue(op2Type)) {
         if (isOutOfRange(args[1], 255)) {
           return 'Invalid inmediate for MOV. Number out of range. Expected 0-255 but got ' + args[1];
         } else if (op1Type === OperandType.HighRegister) {
@@ -162,7 +119,7 @@ function lineToInstruction(line: string): Instruction | string {
 
       const op1Type = operandToOptype(args[0]);
       const op2Type = operandToOptype(args[1]);
-      if (op1Type === undefined || (!isGeneralReg(op1Type) && op1Type !== OperandType.SpRegister)) {
+      if (op1Type === undefined || (!isLowHighRegister(op1Type) && op1Type !== OperandType.SpRegister)) {
         return 'Invalid operand 1 for ADD. Expected r[0-15] or sp, got ' + args[0];
       } else if (op2Type === undefined) {
         return 'Invalid operand 2 for ADD. Unexpected value: ' + args[1];
@@ -172,9 +129,9 @@ function lineToInstruction(line: string): Instruction | string {
         // ADD SHORT FORM
         switch (op1Type) {
           case OperandType.LowRegister:
-            if (!isInmediateVal(op2Type) && !isGeneralReg(op2Type) && op2Type !== OperandType.SpRegister) {
+            if (!isInmediateValue(op2Type) && !isLowHighRegister(op2Type) && op2Type !== OperandType.SpRegister) {
               return 'Invalid operand 2 for ADD. Expected #Inm, r[0-15] or sp, got ' + args[1];
-            } else if (isInmediateVal(op2Type) && isOutOfRange(args[1], 255)) {
+            } else if (isInmediateValue(op2Type) && isOutOfRange(args[1], 255)) {
               return 'Invalid inmediate for ADD. Number out of range. Expected 0-255 but got ' + args[1];
             }
 
@@ -189,7 +146,9 @@ function lineToInstruction(line: string): Instruction | string {
             };
 
           case OperandType.HighRegister:
-            if (!isGeneralReg(op2Type) && op2Type !== OperandType.SpRegister) {
+            if (isInmediateValue(op2Type)) {
+              return 'Invalid operand 2 for ADD. Only low registers are allowed with inmediate values';
+            } else if (!isLowHighRegister(op2Type) && op2Type !== OperandType.SpRegister) {
               return 'Invalid operand 2 for ADD. Expected r[0-15] or sp, got ' + args[1];
             }
 
@@ -203,9 +162,9 @@ function lineToInstruction(line: string): Instruction | string {
             };
 
           case OperandType.SpRegister:
-            if (!isInmediateVal(op2Type) && !isGeneralReg(op2Type)) {
+            if (!isInmediateValue(op2Type) && !isLowHighRegister(op2Type)) {
               return 'Invalid operand 2 for ADD. Expected r[0-15] or #Inm, got ' + args[1];
-            } else if (isInmediateVal(op2Type)) {
+            } else if (isInmediateValue(op2Type)) {
               if (isOutOfRange(args[1], 508)) {
                 return 'Invalid inmediate for ADD. Number out of range. Expected 0-508 but got ' + args[1];
               } else if (!isAligned(args[1], 4)) {
@@ -234,31 +193,33 @@ function lineToInstruction(line: string): Instruction | string {
           return 'Invalid operand 3 for ADD. Expected register or #Inm, got ' + args[2];
         } else if (
           (op1Type === OperandType.HighRegister || op2Type === OperandType.HighRegister) &&
-          isInmediateVal(op3Type)
+          isInmediateValue(op3Type)
         ) {
           return 'Invalid register for ADD. Only low registers are allowed with inmediate values';
         } else if (
-          (isGeneralReg(op3Type) || op3Type === OperandType.SpRegister) &&
+          (isLowHighRegister(op3Type) || op3Type === OperandType.SpRegister) &&
           args[0] !== args[1] &&
           args[0] !== args[2]
         ) {
           return 'Destiny must overlap one source register';
         }
 
-        // op1Type and op2Type are registers, op3Type is an inmediate
+        // op1Type and op2Type are registers, op3Type is an inmediate or register
         switch (op1Type) {
           case OperandType.LowRegister:
             if (op2Type === OperandType.LowRegister) {
-              if (isInmediateVal(op3Type)) {
+              if (isInmediateValue(op3Type)) {
                 const maxValue = args[0] === args[1] ? 255 : 7;
                 if (isOutOfRange(args[2], maxValue)) {
-                  return 'Invalid inmediate for ADD. Number out of range. Expected 0-' + maxValue + ' but got ' + args[2];
+                  return (
+                    'Invalid inmediate for ADD. Number out of range. Expected 0-' + maxValue + ' but got ' + args[2]
+                  );
                 }
-              } else if (!isGeneralReg(op3Type) && op3Type !== OperandType.SpRegister) {
+              } else if (!isLowHighRegister(op3Type) && op3Type !== OperandType.SpRegister) {
                 return 'Invalid operand 3 for ADD. Expected r[0-15], sp or #8bit_Inm, got ' + args[2];
               }
             } else if (op2Type === OperandType.SpRegister) {
-              if (isInmediateVal(op3Type)) {
+              if (isInmediateValue(op3Type)) {
                 if (isOutOfRange(args[2], 1020)) {
                   return 'Invalid inmediate for ADD. Number out of range. Expected 0-1020 but got ' + args[2];
                 }
@@ -281,9 +242,9 @@ function lineToInstruction(line: string): Instruction | string {
             };
 
           case OperandType.HighRegister:
-            if (!isGeneralReg(op2Type) && op2Type !== OperandType.SpRegister) {
+            if (!isLowHighRegister(op2Type) && op2Type !== OperandType.SpRegister) {
               return 'Invalid operand 2 for ADD. Expected r[0-15] or sp, got ' + args[1];
-            } else if (!isGeneralReg(op3Type)) {
+            } else if (!isLowHighRegister(op3Type)) {
               return 'Invalid operand 3 for ADD. Expected r[0-15], got ' + args[2];
             }
 
@@ -298,13 +259,13 @@ function lineToInstruction(line: string): Instruction | string {
             };
 
           case OperandType.SpRegister:
-            if (!isGeneralReg(op2Type) && op2Type !== OperandType.SpRegister) {
+            if (!isLowHighRegister(op2Type) && op2Type !== OperandType.SpRegister) {
               return 'Invalid operand 2 for ADD. Expected r[0-15] or sp, got ' + args[1];
-            } else if (isInmediateVal(op3Type)) {
+            } else if (isInmediateValue(op3Type)) {
               if (isOutOfRange(args[2], 508)) {
                 return 'Invalid inmediate for ADD. Number out of range. Expected 0-508 but got ' + args[2];
               }
-            } else if (!isGeneralReg(op3Type)) {
+            } else if (!isLowHighRegister(op3Type)) {
               return 'Invalid operand 3 for ADD. Expected r[0-15] or #Inm, got ' + args[2];
             }
 
@@ -342,12 +303,11 @@ function compile_text_section(textSection: string): Program {
       continue;
     }
 
-    let label = undefined;
+    let label: string | undefined;
     if (/^\w+:/.test(line)) {
       // A label exists in this line
       label = line.split(':')[0];
       line = line.slice(label.length + 1).trim();
-      console.log("Line: " + line);
       while (line.length === 0) {
         // The line is just a label, parse next line
         line = lines[++i];
@@ -403,5 +363,4 @@ function compile_assembly(source: string): Program {
 }
 
 export default compile_assembly;
-export { Operation, OperandType, assert, wordToOperation, operationToWord };
-export type { Instruction };
+export { assert };

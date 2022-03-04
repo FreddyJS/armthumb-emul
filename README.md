@@ -29,6 +29,7 @@ To update the tests when running locally and **not** using --ci the test suite w
 By removing the .tmp extension the file will be the expected output on the next tests.
 
 ## Setup the crosscompiler and qemu
+The crosscompiler is used on the test suites to compile the assembly code and ensure it is valid.  
 ```sh
 sudo apt-get install gcc-arm-linux-gnueabihf
 sudo apt install qemu-user
