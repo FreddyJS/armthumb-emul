@@ -155,6 +155,7 @@
   "program": [
     {
       "operation": 0,
+      "name": "mov",
       "operands": [
         {
           "type": 0,
@@ -169,6 +170,7 @@
     },
     {
       "operation": 0,
+      "name": "mov",
       "operands": [
         {
           "type": 0,
