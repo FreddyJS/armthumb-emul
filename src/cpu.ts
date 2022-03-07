@@ -56,7 +56,7 @@ type cpuProps = {
   stackSize?: number;
 };
 
-function defaultCPU(props: cpuProps = {memorySize: defaultMemorySize, stackSize: defaultStackSize}): armCPU_T {
+function defaultCPU(props: cpuProps = { memorySize: defaultMemorySize, stackSize: defaultStackSize }): armCPU_T {
   const armCPU: armCPU_T = {
     regs: { ...defaultRegs },
     pc: 0,
@@ -109,6 +109,14 @@ function defaultCPU(props: cpuProps = {memorySize: defaultMemorySize, stackSize:
                 : parseInt(op2.value.slice(1), 10);
 
             this.regs[op1.value] = value;
+            if (
+              (op1.type === OperandType.LowRegister && op2.type === OperandType.LowRegister) ||
+              op2.type === OperandType.HexInmediate ||
+              op2.type === OperandType.DecInmediate
+            ) {
+              this.set_flag(Flags.Z, value === 0);
+              this.set_flag(Flags.N, (value & 0x80000000) !== 0);
+            }
           }
           break;
 

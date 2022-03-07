@@ -312,7 +312,7 @@ function compile_text_section(textSection: string): Program {
         program.error = {
           line: i + 1,
           message: 'The symbol `' + label + '` is already defined',
-        }
+        };
         return program;
       }
 

@@ -15,8 +15,8 @@ process.argv.forEach((arg) => {
 
 function checkWithCrosscompiler(file: string) {
   // Using arm-linux-gnueabihf-as to compile the assembly
-  const cmd = `arm-linux-gnueabihf-as -mthumb -o ${file.replace(".S", ".o")} ${file}`;
-  const options = {stdio : 'pipe', encoding: 'utf-8'};
+  const cmd = `arm-linux-gnueabihf-as -mthumb -o ${file.replace('.S', '.o')} ${file}`;
+  const options = { stdio: 'pipe', encoding: 'utf-8' };
 
   try {
     exec(cmd, options);
@@ -33,7 +33,7 @@ function dumpCPU(cpu: armCPU_T, file: string) {
 test('MOV', () => {
   // Load the assembly and expected output
   const test_name = expect.getState().currentTestName.toLowerCase();
-  const cpu = defaultCPU({memorySize: 0, stackSize: 0});
+  const cpu = defaultCPU({ memorySize: 0, stackSize: 0 });
   const asm = fs.readFileSync(ASM_DIR + `${test_name}.S`, 'utf8');
   let expected = undefined;
   try {
@@ -67,7 +67,7 @@ test('MOV', () => {
 test('ADD', () => {
   // Load the assembly and expected output
   const test_name = expect.getState().currentTestName.toLowerCase();
-  const cpu = defaultCPU({memorySize: 0, stackSize: 0});
+  const cpu = defaultCPU({ memorySize: 0, stackSize: 0 });
   const asm = fs.readFileSync(ASM_DIR + `${test_name}.S`, 'utf8');
   let expected = undefined;
   try {
@@ -101,7 +101,7 @@ test('ADD', () => {
 test('LABELS', () => {
   // Load the assembly and expected output
   const test_name = expect.getState().currentTestName.toLowerCase();
-  const cpu = defaultCPU({memorySize: 0, stackSize: 0});
+  const cpu = defaultCPU({ memorySize: 0, stackSize: 0 });
   const asm = fs.readFileSync(ASM_DIR + `${test_name}.S`, 'utf8');
   let expected = undefined;
   try {
