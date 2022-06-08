@@ -1,6 +1,6 @@
 import compile_assembly, { assert, parseInmediate } from './compiler';
 
-import { Operation, OperandType, Program, isLowHighRegister, isInmediateValue } from './types';
+import { Operation, OperandType, Program, isInmediateValue } from './types';
 import type { Instruction } from './types';
 
 const defaultMemorySize = 64;
@@ -32,7 +32,7 @@ enum Flags {
   V = 0x10000000,
 }
 
-const SPREGISTER = 'r13';
+// const SPREGISTER = 'r13';
 // const LRREGISTER = 'r14';
 const PCREGISTER = 'r15';
 

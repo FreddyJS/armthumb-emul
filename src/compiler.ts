@@ -7,7 +7,6 @@ const assert = (condition: boolean, message: string) => {
   }
 };
 
-
 function parseInmediate(operand: Operand): number {
   const radix = operand.value.startsWith('#0x') ? 16 : 10;
   return parseInt(operand.value.slice(1), radix);
