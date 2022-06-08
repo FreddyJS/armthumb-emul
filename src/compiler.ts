@@ -95,6 +95,8 @@ function lineToInstruction(line: string): Instruction | string {
         return 'Invalid operand 1 for MOV. Expected r[0-15] or sp, got ' + args[0];
       } else if (op2Type === undefined) {
         return 'Invalid operand 2 for MOV. Expected register or #8bit_Inm, got ' + args[1];
+      } else if ((op1Type === OperandType.SpRegister || op1Type === OperandType.HighRegister) && isInmediateValue(op2Type)) {
+        return 'Invalid operand 2 for MOV. Only low registers allowed with inmediate values';
       }
 
       if (isInmediateValue(op2Type)) {
