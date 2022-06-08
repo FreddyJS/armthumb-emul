@@ -1,17 +1,20 @@
 enum Operation {
   MOV,
   ADD,
+  SUB,
   TOTAL_OPERATIONS,
 }
 
 const wordToOperation: { [key: string]: Operation } = {
   mov: Operation.MOV,
   add: Operation.ADD,
+  sub: Operation.SUB,
 };
 
 const operationToWord: { [key: number]: string } = {
   [Operation.MOV]: 'mov',
   [Operation.ADD]: 'add',
+  [Operation.SUB]: 'sub',
 };
 
 enum OperandType {

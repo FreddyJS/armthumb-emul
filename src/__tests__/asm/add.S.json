@@ -5,7 +5,7 @@
     "r2": 1532,
     "r3": 2076,
     "r4": 1024,
-    "r5": 0,
+    "r5": 3100,
     "r6": 0,
     "r7": 0,
     "r8": 1038,
@@ -15,7 +15,7 @@
     "r12": 0,
     "r13": 512,
     "r14": 0,
-    "r15": 36
+    "r15": 38
   },
   "cpsr": 0,
   "memory": [],
@@ -205,7 +205,7 @@
       "operands": [
         {
           "type": 2,
-          "value": "sp"
+          "value": "r13"
         },
         {
           "type": 4,
@@ -219,11 +219,11 @@
       "operands": [
         {
           "type": 2,
-          "value": "sp"
+          "value": "r13"
         },
         {
           "type": 2,
-          "value": "sp"
+          "value": "r13"
         },
         {
           "type": 4,
@@ -241,7 +241,7 @@
         },
         {
           "type": 2,
-          "value": "sp"
+          "value": "r13"
         },
         {
           "type": 4,
@@ -259,7 +259,7 @@
         },
         {
           "type": 2,
-          "value": "sp"
+          "value": "r13"
         }
       ]
     },
@@ -277,7 +277,7 @@
         },
         {
           "type": 2,
-          "value": "sp"
+          "value": "r13"
         }
       ]
     },
@@ -291,7 +291,7 @@
         },
         {
           "type": 2,
-          "value": "sp"
+          "value": "r13"
         }
       ]
     },
@@ -305,11 +305,29 @@
         },
         {
           "type": 2,
-          "value": "sp"
+          "value": "r13"
         },
         {
           "type": 1,
           "value": "r10"
+        }
+      ]
+    },
+    {
+      "operation": 1,
+      "name": "add",
+      "operands": [
+        {
+          "type": 0,
+          "value": "r5"
+        },
+        {
+          "type": 0,
+          "value": "r4"
+        },
+        {
+          "type": 0,
+          "value": "r3"
         }
       ]
     }

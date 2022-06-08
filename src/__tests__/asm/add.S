@@ -18,6 +18,7 @@
   add r4, r4, sp    @ high-low (long SP)
   add r10, sp       @ high-high (short SP)
   add r10, sp, r10  @ high-high (long SP)
+  add r5, r4, r3    @ low-low-low
   @ Expected registers state
   @ sp = 512
   @ r0 = 519, r1 = 256, r2 = 1532, r3 = 2076, r4 = 1024
