@@ -2,6 +2,7 @@ enum Operation {
   MOV,
   ADD,
   SUB,
+  MUL,
   TOTAL_OPERATIONS,
 }
 
@@ -9,12 +10,14 @@ const wordToOperation: { [key: string]: Operation } = {
   mov: Operation.MOV,
   add: Operation.ADD,
   sub: Operation.SUB,
+  mul: Operation.MUL,
 };
 
 const operationToWord: { [key: number]: string } = {
   [Operation.MOV]: 'mov',
   [Operation.ADD]: 'add',
   [Operation.SUB]: 'sub',
+  [Operation.MUL]: 'mul',
 };
 
 enum OperandType {
@@ -48,7 +51,7 @@ type Program = {
 };
 
 function isLowHighRegister(type: OperandType): boolean {
-  return type === OperandType.LowRegister || type === OperandType.HighRegister;
+  return type === OperandType.LowRegister || type === OperandType.HighRegister || type === OperandType.SpRegister;
 }
 
 function isInmediateValue(type: OperandType): boolean {

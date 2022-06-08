@@ -77,7 +77,7 @@ function lineToInstruction(line: string): Instruction | string {
     return 'Unknown operation: ' + words[0];
   }
 
-  assert(Operation.TOTAL_OPERATIONS === 3, 'Exhaustive handling of operations in line_to_op');
+  assert(Operation.TOTAL_OPERATIONS === 4, 'Exhaustive handling of operations in line_to_op');
   switch (operation) {
     case Operation.MOV: {
       if (args.length !== 2) {
@@ -92,8 +92,8 @@ function lineToInstruction(line: string): Instruction | string {
       }
 
       if (op1Type === undefined || !isLowHighRegister(op1Type)) {
-        return 'Invalid operand 1 for MOV. Expected register, got ' + args[0];
-      } else if (op2Type === undefined || (!isLowHighRegister(op2Type) && !isInmediateValue(op2Type))) {
+        return 'Invalid operand 1 for MOV. Expected r[0-15] or sp, got ' + args[0];
+      } else if (op2Type === undefined) {
         return 'Invalid operand 2 for MOV. Expected register or #8bit_Inm, got ' + args[1];
       }
 
@@ -129,7 +129,7 @@ function lineToInstruction(line: string): Instruction | string {
         args[i] = args[i] === 'sp' ? 'r13' : args[i];
       }
 
-      if (op1Type === undefined || isInmediateValue(op1Type)) {
+      if (op1Type === undefined || !isLowHighRegister(op1Type)) {
         return 'Invalid operand 1 for ADD. Expected r[0-15] or sp, got ' + args[0];
       } else if (op2Type === undefined) {
         return 'Invalid operand 2 for ADD. Unexpected value: ' + args[1];
@@ -139,7 +139,7 @@ function lineToInstruction(line: string): Instruction | string {
         // ADD SHORT FORM
         switch (op1Type) {
           case OperandType.LowRegister:
-            if (!isInmediateValue(op2Type) && !isLowHighRegister(op2Type) && op2Type !== OperandType.SpRegister) {
+            if (!isInmediateValue(op2Type) && !isLowHighRegister(op2Type)) {
               return 'Invalid operand 2 for ADD. Expected #Inm, r[0-15] or sp, got ' + args[1];
             } else if (isInmediateValue(op2Type) && isOutOfRange(args[1], 255)) {
               return 'Invalid inmediate for ADD. Number out of range. Expected 0-255 but got ' + args[1];
@@ -158,7 +158,7 @@ function lineToInstruction(line: string): Instruction | string {
           case OperandType.HighRegister:
             if (isInmediateValue(op2Type)) {
               return 'Invalid operand 2 for ADD. Only low registers are allowed with inmediate values';
-            } else if (!isLowHighRegister(op2Type) && op2Type !== OperandType.SpRegister) {
+            } else if (!isLowHighRegister(op2Type)) {
               return 'Invalid operand 2 for ADD. Expected r[0-15] or sp, got ' + args[1];
             }
 
@@ -224,7 +224,7 @@ function lineToInstruction(line: string): Instruction | string {
                     'Invalid inmediate for ADD. Number out of range. Expected 0-' + maxValue + ' but got ' + args[2]
                   );
                 }
-              } else if (!isLowHighRegister(op3Type) && op3Type !== OperandType.SpRegister) {
+              } else if (!isLowHighRegister(op3Type)) {
                 return 'Invalid operand 3 for ADD. Expected r[0-15], sp or #8bit_Inm, got ' + args[2];
               }
             } else if (op2Type === OperandType.SpRegister) {
@@ -251,7 +251,7 @@ function lineToInstruction(line: string): Instruction | string {
             };
 
           case OperandType.HighRegister:
-            if (!isLowHighRegister(op2Type) && op2Type !== OperandType.SpRegister) {
+            if (!isLowHighRegister(op2Type)) {
               return 'Invalid operand 2 for ADD. Expected r[0-15] or sp, got ' + args[1];
             } else if (!isLowHighRegister(op3Type)) {
               return 'Invalid operand 3 for ADD. Expected r[0-15], got ' + args[2];
@@ -268,7 +268,7 @@ function lineToInstruction(line: string): Instruction | string {
             };
 
           case OperandType.SpRegister:
-            if (!isLowHighRegister(op2Type) && op2Type !== OperandType.SpRegister) {
+            if (!isLowHighRegister(op2Type)) {
               return 'Invalid operand 2 for ADD. Expected r[0-15] or sp, got ' + args[1];
             } else if (isInmediateValue(op3Type)) {
               if (isOutOfRange(args[2], 508)) {
@@ -413,7 +413,53 @@ function lineToInstruction(line: string): Instruction | string {
         }
 
       }
+    }
 
+    case Operation.MUL: {
+      if (args.length !== 2 && args.length !== 3) {
+        return 'Invalid number of arguments for MUL. Expected 2 or 3, got ' + args.length;
+      }
+
+      const op1Type = operandToOptype(args[0]);
+      const op2Type = operandToOptype(args[1]);
+      const op3Type = operandToOptype(args[2]);
+
+      if (op1Type === undefined || op1Type !== OperandType.LowRegister) {
+        return 'Invalid operand 1 for MUL. Expected low register r[0-7], got ' + args[0];
+      } else if (op2Type === undefined || op2Type !== OperandType.LowRegister) {
+        return 'Invalid operand 2 for MUL. Expected low register r[0-7], got ' + args[1];
+      }
+
+      // Short form
+      if (args.length === 2) {
+        // CASE: mul r1, r2
+        return {
+          operation: Operation.MUL,
+          name: 'mul',
+          operands: [
+            { type: op1Type, value: args[0] },
+            { type: op2Type, value: args[1] },
+          ],
+        };
+      } else {
+        // Long form
+        if (op3Type === undefined || op3Type !== OperandType.LowRegister) {
+          return 'Invalid operand 3 for MUL. Expected r[0-7], got ' + args[2];
+        } else if (args[0] !== args[1] && args[0] !== args[2]) {
+          return 'Destination register must be the same as one of the source registers for MUL.';
+        }
+
+        // CASE: mul r2, r2, r3
+        return {
+          operation: Operation.MUL,
+          name: 'mul',
+          operands: [
+            { type: op1Type, value: args[0] },
+            { type: op2Type, value: args[1] },
+            { type: op3Type, value: args[2] },
+          ],
+        };
+      }
     }
 
     default:

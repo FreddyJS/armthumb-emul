@@ -100,7 +100,7 @@ function defaultCPU(props: cpuProps = { memorySize: defaultMemorySize, stackSize
       this.program = compiled.ins;
     },
     execute(ins: Instruction) {
-      assert(Operation.TOTAL_OPERATIONS === 3, 'Exhaustive handling of operations in execute');
+      assert(Operation.TOTAL_OPERATIONS === 4, 'Exhaustive handling of operations in execute');
       switch (ins.operation) {
         case Operation.MOV:
           {
@@ -148,6 +148,18 @@ function defaultCPU(props: cpuProps = { memorySize: defaultMemorySize, stackSize
               isInmediateValue(op3.type) ? parseInmediate(op3) : this.regs[op3.value];
 
             this.regs[destReg] = res1 - res2;
+          }
+          break;
+
+        case Operation.MUL:
+          {
+            const [op1, op2, op3] = ins.operands;
+            const destReg = op1.value;
+
+            const mul1 = op3 === undefined ? this.regs[op1.value] : this.regs[op2.value];
+            const mul2 = op3 === undefined ? this.regs[op2.value] : this.regs[op3.value];
+
+            this.regs[destReg] = mul1 * mul2;
           }
           break;
 
