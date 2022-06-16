@@ -17,7 +17,10 @@
     "r14": 0,
     "r15": 16
   },
-  "cpsr": 0,
+  "z": false,
+  "n": false,
+  "c": false,
+  "v": false,
   "memory": [],
   "stack": [],
   "program": [
