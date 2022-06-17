@@ -5,6 +5,10 @@ import type { Instruction } from './types';
 
 const defaultMemorySize = 64;
 const defaultStackSize = 64;
+const maxUnsignedValue = 4294967295;
+const maxPositiveValue = 2147483647;
+const maxNegativeValue = -2147483648;
+
 const defaultRegs = {
   // General purpose registers
   r0: 0x00,
@@ -51,9 +55,9 @@ type armCPU_T = {
   step: () => void;
   reset: () => void;
   load: (program: Program) => void;
-  load_assembly: (assembly: string) => void;
+  loadAssembly: (assembly: string) => void;
   execute: (ins: Instruction) => void;
-  set_flag: (flag: Flags, value: boolean) => void;
+  setFlag: (flag: Flags, value: boolean) => void;
 };
 
 type cpuProps = {
@@ -98,7 +102,7 @@ function defaultCPU(props: cpuProps = { memorySize: defaultMemorySize, stackSize
       // TODO: Copy the program memory to the CPU memory
       this.program = program.ins;
     },
-    load_assembly(assembly: string) {
+    loadAssembly(assembly: string) {
       const compiled = compile_assembly(assembly);
       if (compiled.error) {
         throw new Error(compiled.error.message);
@@ -119,9 +123,10 @@ function defaultCPU(props: cpuProps = { memorySize: defaultMemorySize, stackSize
               (op1.type === OperandType.LowRegister && op2.type === OperandType.LowRegister) ||
               isInmediateValue(op2.type)
             ) {
-              this.set_flag(Flags.Z, value === 0);
-              // tslint:disable-next-line:no-bitwise
-              this.set_flag(Flags.N, (value & 0x80000000) !== 0);
+              this.setFlag(Flags.Z, value === 0);
+              this.setFlag(Flags.N, value > maxPositiveValue);
+              // TODO: How to update the N flag?
+              // this.setFlag(Flags.N, value > maxPositiveValue);
             }
           }
           break;
@@ -138,7 +143,20 @@ function defaultCPU(props: cpuProps = { memorySize: defaultMemorySize, stackSize
               :
               isInmediateValue(op3.type) ? parseInmediateOperand(op3) : this.regs[op3.value];
 
-            this.regs[destReg] = sum1 + sum2;
+            if (sum1 + sum2 > maxUnsignedValue) {
+              this.regs[destReg] = sum1 + sum2 - maxUnsignedValue - 1;
+              this.setFlag(Flags.C, true);
+            } else {
+              this.regs[destReg] = sum1 + sum2;
+            }
+            if (
+              (op1.type === OperandType.LowRegister && op2.type === OperandType.LowRegister) ||
+              isInmediateValue(op2.type)
+            ) {
+              this.setFlag(Flags.Z, this.regs[destReg] === 0);
+              this.setFlag(Flags.N, this.regs[destReg] > maxPositiveValue);
+              // TODO: How to update the V flag?
+            }
           }
           break;
 
@@ -153,7 +171,20 @@ function defaultCPU(props: cpuProps = { memorySize: defaultMemorySize, stackSize
               :
               isInmediateValue(op3.type) ? parseInmediateOperand(op3) : this.regs[op3.value];
 
-            this.regs[destReg] = res1 - res2;
+            var carry = false;
+            if (res1 - res2 < 0) {
+              this.regs[destReg] = maxUnsignedValue - Math.abs(res1 - res2) + 1;
+            } else {
+              this.regs[destReg] = res1 - res2;
+              carry = true;
+            }
+
+            if (op1.type !== OperandType.SpRegister) {
+              this.setFlag(Flags.Z, this.regs[destReg] === 0);
+              this.setFlag(Flags.N, this.regs[destReg] > maxPositiveValue);
+              this.setFlag(Flags.C, carry);
+              // TODO: How to update the V flag?
+            }
           }
           break;
 
@@ -166,6 +197,8 @@ function defaultCPU(props: cpuProps = { memorySize: defaultMemorySize, stackSize
             const mul2 = op3 === undefined ? this.regs[op2.value] : this.regs[op3.value];
 
             this.regs[destReg] = mul1 * mul2;
+            this.setFlag(Flags.Z, this.regs[destReg] === 0);
+            this.setFlag(Flags.N, this.regs[destReg] > maxPositiveValue);
           }
           break;
 
@@ -174,9 +207,12 @@ function defaultCPU(props: cpuProps = { memorySize: defaultMemorySize, stackSize
             const [op1, op2] = ins.operands;
             const cmp1 = this.regs[op1.value];
             const cmp2 = isInmediateValue(op2.type) ? parseInmediateOperand(op2) : this.regs[op2.value];
+            const value = cmp1 - cmp2;
 
-            this.set_flag(Flags.Z, cmp1 === cmp2);
-            this.set_flag(Flags.N, cmp2 > cmp1);
+            this.setFlag(Flags.Z, value === 0);
+            this.setFlag(Flags.N, value > maxPositiveValue || value < 0);
+            this.setFlag(Flags.C, value < 0);
+            // TODO: How to update the V flag?
           }
           break;
 
@@ -186,8 +222,10 @@ function defaultCPU(props: cpuProps = { memorySize: defaultMemorySize, stackSize
             const cmp1 = this.regs[op1.value];
             const cmp2 = isInmediateValue(op2.type) ? parseInmediateOperand(op2) : this.regs[op2.value];
 
-            this.set_flag(Flags.Z, cmp1 === - cmp2);
-            this.set_flag(Flags.N, cmp1 + cmp2 < 0);
+            this.setFlag(Flags.Z, cmp1 === - cmp2);
+            this.setFlag(Flags.N, cmp1 + cmp2 > maxPositiveValue);
+            this.setFlag(Flags.C, cmp1 + cmp2 > maxUnsignedValue);
+            // TODO: How to update the V flag?
           }
           break;
 
@@ -195,7 +233,7 @@ function defaultCPU(props: cpuProps = { memorySize: defaultMemorySize, stackSize
           throw new Error('Invalid operation in execute. This should never happen.');
       }
     },
-    set_flag(flag: Flags, value: boolean) {
+    setFlag(flag: Flags, value: boolean) {
       switch (flag) {
         case Flags.Z:
           this.z = value;
