@@ -125,8 +125,6 @@ function defaultCPU(props: cpuProps = { memorySize: defaultMemorySize, stackSize
             ) {
               this.setFlag(Flags.Z, value === 0);
               this.setFlag(Flags.N, value > maxPositiveValue);
-              // TODO: How to update the N flag?
-              // this.setFlag(Flags.N, value > maxPositiveValue);
             }
           }
           break;
@@ -155,7 +153,7 @@ function defaultCPU(props: cpuProps = { memorySize: defaultMemorySize, stackSize
             ) {
               this.setFlag(Flags.Z, this.regs[destReg] === 0);
               this.setFlag(Flags.N, this.regs[destReg] > maxPositiveValue);
-              // TODO: How to update the V flag?
+              this.setFlag(Flags.V, sum1 <= maxPositiveValue && sum1 + sum2 > maxPositiveValue);
             }
           }
           break;
@@ -183,7 +181,7 @@ function defaultCPU(props: cpuProps = { memorySize: defaultMemorySize, stackSize
               this.setFlag(Flags.Z, this.regs[destReg] === 0);
               this.setFlag(Flags.N, this.regs[destReg] > maxPositiveValue);
               this.setFlag(Flags.C, carry);
-              // TODO: How to update the V flag?
+              this.setFlag(Flags.V, res1 > maxPositiveValue && res1 - res2 <= maxPositiveValue);
             }
           }
           break;
@@ -225,7 +223,7 @@ function defaultCPU(props: cpuProps = { memorySize: defaultMemorySize, stackSize
             this.setFlag(Flags.Z, cmp1 === - cmp2);
             this.setFlag(Flags.N, cmp1 + cmp2 > maxPositiveValue);
             this.setFlag(Flags.C, cmp1 + cmp2 > maxUnsignedValue);
-            // TODO: How to update the V flag?
+            this.setFlag(Flags.V, cmp1 <= maxPositiveValue && cmp1 + cmp2 > maxPositiveValue);
           }
           break;
 
