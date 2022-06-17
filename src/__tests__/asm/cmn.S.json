@@ -15,9 +15,9 @@
     "r12": 0,
     "r13": 0,
     "r14": 0,
-    "r15": 6
+    "r15": 4
   },
-  "z": true,
+  "z": false,
   "n": false,
   "c": false,
   "v": false,
@@ -40,7 +40,7 @@
     },
     {
       "operation": 5,
-      "name": "cmp",
+      "name": "cmn",
       "operands": [
         {
           "type": 0,
@@ -49,20 +49,6 @@
         {
           "type": 0,
           "value": "r1"
-        }
-      ]
-    },
-    {
-      "operation": 5,
-      "name": "cmp",
-      "operands": [
-        {
-          "type": 0,
-          "value": "r0"
-        },
-        {
-          "type": 0,
-          "value": "r2"
         }
       ]
     }
