@@ -190,7 +190,7 @@ function defaultCPU(props: cpuProps = { memorySize: defaultMemorySize, stackSize
           {
             const [op1, op2] = ins.operands;
             const destReg = op1.value;
-            const value = parseInmediateOperand(op2) === 0 ? 0 : maxUnsignedValue - this.regs[op2.value] + 1;
+            const value = this.regs[op2.value] === 0 ? 0 : maxUnsignedValue - this.regs[op2.value] + 1;
             
             this.regs[destReg] = value;
 
