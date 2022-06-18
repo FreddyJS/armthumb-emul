@@ -49,7 +49,7 @@ function runTest(test_name: string) {
   expect(program.error).toBeUndefined();
   cpu.load(program);
   cpu.run();
-  
+
   if (expected !== undefined) {
     const state = JSON.parse(expected);
     expect(JSON.stringify(cpu)).toBe(JSON.stringify(state));
@@ -65,210 +65,48 @@ function runTest(test_name: string) {
 test('MOV', () => {
   // Load the assembly and expected output
   const test_name = expect.getState().currentTestName.toLowerCase();
-  const cpu = defaultCPU({ memorySize: 0, stackSize: 0 });
-  const asm = fs.readFileSync(ASM_DIR + `${test_name}.S`, 'utf8');
-  let expected = undefined;
-  try {
-    expected = fs.readFileSync(ASM_DIR + `${test_name}.S.json`, 'utf8');
-  } catch (error) {
-    if (ci) {
-      // Fail test in CI if expected output is not found
-      expect(expected).toBeDefined();
-    }
-  }
-
-  // Compile, load and run the assembly in the CPU
-  expect(checkWithCrosscompiler(ASM_DIR + `${test_name}.S`)).toBe(true);
-  const program = compile_assembly(asm);
-  expect(program.error).toBeUndefined();
-  cpu.load(program);
-  cpu.run();
-
-  if (expected !== undefined) {
-    const state = JSON.parse(expected);
-    expect(JSON.stringify(cpu)).toBe(JSON.stringify(state));
-  } else {
-    // In CI we already failed the test if expected output is not found
-    dumpCPU(cpu, ASM_DIR + `${test_name}.S.json.tmp`);
-    console.log(`No expected output saved for '${test_name}.S'. Dumping state to ${ASM_DIR}${test_name}.S.json.tmp`);
-    console.log(`Expected state dumped. Remove the .tmp if everything is ok.`);
-    expect(expected).toBeDefined();
-  }
+  runTest(test_name);
 });
 
 test('ADD', () => {
   // Load the assembly and expected output
   const test_name = expect.getState().currentTestName.toLowerCase();
-  const cpu = defaultCPU({ memorySize: 0, stackSize: 0 });
-  const asm = fs.readFileSync(ASM_DIR + `${test_name}.S`, 'utf8');
-  let expected = undefined;
-  try {
-    expected = fs.readFileSync(ASM_DIR + `${test_name}.S.json`, 'utf8');
-  } catch (error) {
-    if (ci) {
-      // Fail test in CI if expected output is not found
-      expect(expected).toBeDefined();
-    }
-  }
-
-  // Compile, load and run the assembly in the CPU
-  expect(checkWithCrosscompiler(ASM_DIR + `${test_name}.S`)).toBe(true);
-  const program = compile_assembly(asm);
-  expect(program.error).toBeUndefined();
-  cpu.load(program);
-  cpu.run();
-
-  if (expected !== undefined) {
-    const state = JSON.parse(expected);
-    expect(JSON.stringify(cpu)).toBe(JSON.stringify(state));
-  } else {
-    // In CI we already failed the test if expected output is not found
-    dumpCPU(cpu, ASM_DIR + `${test_name}.S.json.tmp`);
-    console.log(`No expected output saved for '${test_name}.S'. Dumping state to ${ASM_DIR}${test_name}.S.json.tmp`);
-    console.log(`Expected state dumped. Remove the .tmp if everything is ok.`);
-    expect(expected).toBeDefined();
-  }
+  runTest(test_name);
 });
 
 test('LABELS', () => {
   // Load the assembly and expected output
   const test_name = expect.getState().currentTestName.toLowerCase();
-  const cpu = defaultCPU({ memorySize: 0, stackSize: 0 });
-  const asm = fs.readFileSync(ASM_DIR + `${test_name}.S`, 'utf8');
-  let expected = undefined;
-  try {
-    expected = fs.readFileSync(ASM_DIR + `${test_name}.S.json`, 'utf8');
-  } catch (error) {
-    if (ci) {
-      // Fail test in CI if expected output is not found
-      expect(expected).toBeDefined();
-    }
-  }
-
-  // Compile, load and run the assembly in the CPU
-  expect(checkWithCrosscompiler(ASM_DIR + `${test_name}.S`)).toBe(true);
-  const program = compile_assembly(asm);
-  expect(program.error).toBeUndefined();
-  cpu.load(program);
-  cpu.run();
-
-  if (expected !== undefined) {
-    const state = JSON.parse(expected);
-    expect(JSON.stringify(cpu)).toBe(JSON.stringify(state));
-  } else {
-    // In CI we already failed the test if expected output is not found
-    dumpCPU(cpu, ASM_DIR + `${test_name}.S.json.tmp`);
-    console.log(`No expected output saved for '${test_name}.S'. Dumping state to ${ASM_DIR}${test_name}.S.json.tmp`);
-    console.log(`Expected state dumped. Remove the .tmp if everything is ok.`);
-    expect(expected).toBeDefined();
-  }
+  runTest(test_name);
 });
 
 test('SUB', () => {
   // Load the assembly and expected output
   const test_name = expect.getState().currentTestName.toLowerCase();
-  const cpu = defaultCPU({ memorySize: 0, stackSize: 0 });
-  const asm = fs.readFileSync(ASM_DIR + `${test_name}.S`, 'utf8');
-  let expected = undefined;
-  try {
-    expected = fs.readFileSync(ASM_DIR + `${test_name}.S.json`, 'utf8');
-  } catch (error) {
-    if (ci) {
-      // Fail test in CI if expected output is not found
-      expect(expected).toBeDefined();
-    }
-  }
+  runTest(test_name);
+});
 
-  // Compile, load and run the assembly in the CPU
-  expect(checkWithCrosscompiler(ASM_DIR + `${test_name}.S`)).toBe(true);
-  const program = compile_assembly(asm);
-  expect(program.error).toBeUndefined();
-  cpu.load(program);
-  cpu.run();
-
-  if (expected !== undefined) {
-    const state = JSON.parse(expected);
-    expect(JSON.stringify(cpu)).toBe(JSON.stringify(state));
-  } else {
-    // In CI we already failed the test if expected output is not found
-    dumpCPU(cpu, ASM_DIR + `${test_name}.S.json.tmp`);
-    console.log(`No expected output saved for '${test_name}.S'. Dumping state to ${ASM_DIR}${test_name}.S.json.tmp`);
-    console.log(`Expected state dumped. Remove the .tmp if everything is ok.`);
-    expect(expected).toBeDefined();
-  }
+test('NEG', () => {
+  // Load the assembly and expected output
+  const test_name = expect.getState().currentTestName.toLowerCase();
+  runTest(test_name);
 });
 
 test('MUL', () => {
   // Load the assembly and expected output
   const test_name = expect.getState().currentTestName.toLowerCase();
-  const cpu = defaultCPU({ memorySize: 0, stackSize: 0 });
-  const asm = fs.readFileSync(ASM_DIR + `${test_name}.S`, 'utf8');
-  let expected = undefined;
-  try {
-    expected = fs.readFileSync(ASM_DIR + `${test_name}.S.json`, 'utf8');
-  } catch (error) {
-    if (ci) {
-      // Fail test in CI if expected output is not found
-      expect(expected).toBeDefined();
-    }
-  }
-
-  // Compile, load and run the assembly in the CPU
-  expect(checkWithCrosscompiler(ASM_DIR + `${test_name}.S`)).toBe(true);
-  const program = compile_assembly(asm);
-  expect(program.error).toBeUndefined();
-  cpu.load(program);
-  cpu.run();
-
-  if (expected !== undefined) {
-    const state = JSON.parse(expected);
-    expect(JSON.stringify(cpu)).toBe(JSON.stringify(state));
-  } else {
-    // In CI we already failed the test if expected output is not found
-    dumpCPU(cpu, ASM_DIR + `${test_name}.S.json.tmp`);
-    console.log(`No expected output saved for '${test_name}.S'. Dumping state to ${ASM_DIR}${test_name}.S.json.tmp`);
-    console.log(`Expected state dumped. Remove the .tmp if everything is ok.`);
-    expect(expected).toBeDefined();
-  }
+  runTest(test_name);
 });
 
 
 test('CMP', () => {
   // Load the assembly and expected output
   const test_name = expect.getState().currentTestName.toLowerCase();
-  const cpu = defaultCPU({ memorySize: 0, stackSize: 0 });
-  const asm = fs.readFileSync(ASM_DIR + `${test_name}.S`, 'utf8');
-  let expected = undefined;
-  try {
-    expected = fs.readFileSync(ASM_DIR + `${test_name}.S.json`, 'utf8');
-  } catch (error) {
-    if (ci) {
-      // Fail test in CI if expected output is not found
-      expect(expected).toBeDefined();
-    }
-  }
-
-  // Compile, load and run the assembly in the CPU
-  expect(checkWithCrosscompiler(ASM_DIR + `${test_name}.S`)).toBe(true);
-  const program = compile_assembly(asm);
-  expect(program.error).toBeUndefined();
-  cpu.load(program);
-  cpu.run();
-  
-  if (expected !== undefined) {
-    const state = JSON.parse(expected);
-    expect(JSON.stringify(cpu)).toBe(JSON.stringify(state));
-  } else {
-    // In CI we already failed the test if expected output is not found
-    dumpCPU(cpu, ASM_DIR + `${test_name}.S.json.tmp`);
-    console.log(`No expected output saved for '${test_name}.S'. Dumping state to ${ASM_DIR}${test_name}.S.json.tmp`);
-    console.log(`Expected state dumped. Remove the .tmp if everything is ok.`);
-    expect(expected).toBeDefined();
-  }
+  runTest(test_name);
 });
 
 test('CMN', () => {
   // Load the assembly and expected output
   const test_name = expect.getState().currentTestName.toLowerCase();
-  
+  runTest(test_name);
 });
