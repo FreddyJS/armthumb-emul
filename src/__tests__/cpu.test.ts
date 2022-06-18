@@ -1,10 +1,9 @@
 import compile_assembly from '../compiler';
 import defaultCPU, { armCPU_T } from '../cpu';
+import * as fs from 'fs';
 
 const ASM_DIR = __dirname + '/asm/';
-
 var exec = require('child_process').execSync;
-const fs = require('fs');
 
 let ci = false;
 process.argv.forEach((arg) => {
@@ -33,7 +32,7 @@ function dumpCPU(cpu: armCPU_T, file: string) {
 function runTest(test_name: string) {
   const cpu = defaultCPU({ memorySize: 0, stackSize: 0 });
   const asm = fs.readFileSync(ASM_DIR + `${test_name}.S`, 'utf8');
-  let expected = undefined;
+  let expected: string | undefined = undefined;
   try {
     expected = fs.readFileSync(ASM_DIR + `${test_name}.S.json`, 'utf8');
   } catch (error) {
@@ -63,50 +62,72 @@ function runTest(test_name: string) {
 }
 
 test('MOV', () => {
-  // Load the assembly and expected output
   const test_name = expect.getState().currentTestName.toLowerCase();
   runTest(test_name);
 });
 
 test('ADD', () => {
-  // Load the assembly and expected output
   const test_name = expect.getState().currentTestName.toLowerCase();
   runTest(test_name);
 });
 
 test('LABELS', () => {
-  // Load the assembly and expected output
   const test_name = expect.getState().currentTestName.toLowerCase();
   runTest(test_name);
 });
 
 test('SUB', () => {
-  // Load the assembly and expected output
   const test_name = expect.getState().currentTestName.toLowerCase();
   runTest(test_name);
 });
 
 test('NEG', () => {
-  // Load the assembly and expected output
   const test_name = expect.getState().currentTestName.toLowerCase();
   runTest(test_name);
 });
 
 test('MUL', () => {
-  // Load the assembly and expected output
   const test_name = expect.getState().currentTestName.toLowerCase();
   runTest(test_name);
 });
 
 
 test('CMP', () => {
-  // Load the assembly and expected output
   const test_name = expect.getState().currentTestName.toLowerCase();
   runTest(test_name);
 });
 
 test('CMN', () => {
-  // Load the assembly and expected output
   const test_name = expect.getState().currentTestName.toLowerCase();
   runTest(test_name);
+});
+
+test('AND', () => {
+	const test_name = expect.getState().currentTestName.toLowerCase();
+	runTest(test_name);
+});
+
+test('BIC', () => {
+	const test_name = expect.getState().currentTestName.toLowerCase();
+	runTest(test_name);
+});
+
+test('ORR', () => {
+	const test_name = expect.getState().currentTestName.toLowerCase();
+	runTest(test_name);
+});
+
+test('EOR', () => {
+	const test_name = expect.getState().currentTestName.toLowerCase();
+	runTest(test_name);
+});
+
+test('MVN', () => {
+	const test_name = expect.getState().currentTestName.toLowerCase();
+	runTest(test_name);
+});
+
+test('TST', () => {
+	const test_name = expect.getState().currentTestName.toLowerCase();
+	runTest(test_name);
 });
