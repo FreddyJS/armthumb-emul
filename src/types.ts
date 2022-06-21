@@ -20,6 +20,7 @@ enum Operation {
   LSL,
   LSR,
   ASR,
+  ROR,
   TOTAL_OPERATIONS,
 }
 
@@ -45,6 +46,7 @@ const wordToOperation: { [key: string]: Operation } = {
   lsl: Operation.LSL,
   lsr: Operation.LSR,
   asr: Operation.ASR,
+  ror: Operation.ROR,
 };
 
 const operationToWord: { [key: number]: string } = {
@@ -69,6 +71,7 @@ const operationToWord: { [key: number]: string } = {
   [Operation.LSL]: 'lsl',
   [Operation.LSR]: 'lsr',
   [Operation.ASR]: 'asr',
+  [Operation.ROR]: 'ror',
 };
 
 enum OperandType {
