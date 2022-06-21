@@ -131,3 +131,8 @@ test('TST', () => {
 	const test_name = expect.getState().currentTestName.toLowerCase();
 	runTest(test_name);
 });
+
+test('LSL', () => {
+	const test_name = expect.getState().currentTestName.toLowerCase();
+	runTest(test_name);
+});
