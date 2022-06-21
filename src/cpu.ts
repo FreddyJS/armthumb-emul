@@ -110,7 +110,7 @@ function defaultCPU(props: cpuProps = { memorySize: defaultMemorySize, stackSize
       this.program = compiled.ins;
     },
     execute(ins: Instruction) {
-      assert(Operation.TOTAL_OPERATIONS === 14, 'Exhaustive handling of operations in execute');
+      assert(Operation.TOTAL_OPERATIONS === 15, 'Exhaustive handling of operations in execute');
       switch (ins.operation) {
         case Operation.MOV:
           {
@@ -326,6 +326,26 @@ function defaultCPU(props: cpuProps = { memorySize: defaultMemorySize, stackSize
             for (let i = 0; i < shifts; i++) {
               carry = (shiftValue & 0x80000000) != 0;
               shiftValue = shiftValue << 1;
+            }
+
+            this.regs[destReg] = shiftValue >>> 0;
+            this.setFlag(Flags.Z, this.regs[destReg] === 0);
+            this.setFlag(Flags.N, this.regs[destReg] > maxPositiveValue);
+            this.setFlag(Flags.C, carry);
+          }
+          break;
+
+        case Operation.LSR:
+          {
+            const [op1, op2, op3] = ins.operands;
+            const destReg = op1.value;
+            let shiftValue = this.regs[op2.value];
+            const shifts = isInmediateValue(op3.type) ? parseInmediateOperand(op3) : this.regs[op3.value];
+
+            let carry: boolean = false;
+            for (let i = 0; i < shifts; i++) {
+              carry = (shiftValue & 0x00000001) != 0;
+              shiftValue = shiftValue >> 1;
             }
 
             this.regs[destReg] = shiftValue >>> 0;
