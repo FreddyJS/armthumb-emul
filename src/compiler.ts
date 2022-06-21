@@ -1,5 +1,9 @@
-import { Operation, OperandType, wordToOperation, isLowHighRegister, isInmediateValue, Operand } from './types';
+import { Operation, OperandType, wordToOperation, isLowHighRegister, isInmediateValue, Operand, wordToDirective, Directive } from './types';
 import type { Program, Instruction } from './types';
+
+
+// Object with the symbols defined by the user with .equiv, .eqv y .equ
+const symbols: { [key: string]: string } = {}
 
 const assert = (condition: boolean, message: string) => {
   if (!condition) {
@@ -45,6 +49,37 @@ function cleanInput(source: string): string {
   return stripComments(source).toLowerCase();
 }
 
+function compileDirective(line: string) {
+  console.log("Compiling directive")
+  const directive = wordToDirective[line.split(' ')[0]];
+  line = line.split(' ').slice(1).join('');
+
+  switch (directive) {
+    case Directive.EQUIV:
+    case Directive.EQV:
+    case Directive.EQU:
+      {
+        const args = line.split(',');
+        if (args.length !== 2) {
+          return "Invalid number of args for directive. Expected 2, got " + args.length;
+        }
+
+        const [symbol, value] = args;
+        if (directive !== Directive.EQU && symbols[symbol] !== undefined) {
+          return "Symbol '" + symbol + "' already defined";
+        } else if (!/^\d+$/.test(value) && symbols[value] === undefined) {
+          return "Value must be a number or another symbol";
+        }
+
+        symbols[symbol] = value;
+        return ''
+      }
+    default:
+      throw new Error('Unreachable code in compileDirective. Caused by: ' + directive);
+  }
+}
+
+
 function operandToOptype(operand: string): OperandType | undefined {
   // Check by regular expressions the corresponding operand type. If none is found, return undefined.
   let type: OperandType | undefined;
@@ -74,10 +109,20 @@ function lineToInstruction(line: string): Instruction | string {
 
   const operation = wordToOperation[words[0]];
   if (operation === undefined) {
-    return 'Unknown operation: ' + words[0];
+    if (wordToDirective[words[0]] !== undefined) {
+      return compileDirective(line);
+    } else {
+      return 'Unknown operation: ' + words[0];
+    }
   }
 
-  assert(Operation.TOTAL_OPERATIONS === 17, 'Exhaustive handling of operations in line_to_op');
+  for (let i = 0; i < args.length; i++) {
+    if (symbols[args[i].replace('#', "")] !== undefined) {
+      args[i] = '#' + symbols[args[i].replace('#', '')]
+    }
+  }
+
+  assert(Operation.TOTAL_OPERATIONS === 17, 'Exhaustive handling of operations in lineToInstruction');
   switch (operation) {
     case Operation.MOV: {
       if (args.length !== 2) {
@@ -810,7 +855,7 @@ function lineToInstruction(line: string): Instruction | string {
     }
 
     default:
-      throw new Error('Unreachable code in line_to_op');
+      throw new Error('Unreachable code in lineToInstruction');
   }
 }
 
@@ -849,14 +894,14 @@ function compile_text_section(textSection: string, startLine: number): Program {
     }
 
     const op = lineToInstruction(line);
-    if (typeof op === 'string') {
+    if (typeof op === 'string' && op !== '') {
       program.error = {
         line: i + startLine,
         message: op,
       };
 
       return program;
-    } else {
+    } else if (typeof op !== 'string'){
       op.label = label;
       program.ins.push(op);
     }
@@ -876,7 +921,7 @@ function compile_assembly(source: string): Program {
   let dataSection = '';
   if (dataSectionIndex === -1) {
     // No data section in assembly, no memory needed
-    textSection = source.slice(textSectionIndex + 5);
+    textSection = source.replace(".text", "");
   } else if (dataSectionIndex < textSectionIndex) {
     // Data section is before text section
     textSection = source.slice(textSectionIndex + 5);
