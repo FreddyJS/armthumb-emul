@@ -4,6 +4,26 @@ TESTS_FILE="src/__tests__/cpu.test.ts"
 ASM=".text
     mov r0, #1"
 
+if [[ "regenerate" == "$1" ]]; then
+    echo "Regenerating all tests output.json."
+    read -r -p "Are you sure? [y/N] " response
+    case "$response" in [yY][eE][sS]|[yY]) 
+            rm src/__tests__/asm/*.json*
+            echo "Running tests to generate output..."
+            yarn test > /dev/null 2> /dev/null
+            echo "Renaming .json.tmp files..."
+            for f in src/__tests__/asm/*.json.tmp; do 
+                mv -- "$f" "${f%.json.tmp}.json"
+            done
+
+            yarn test
+            ;;
+        *)
+            exit 0;;
+    esac
+    exit 0
+fi
+
 while getopts n:c: flag
 do
     case "${flag}" in

@@ -22,7 +22,8 @@
   "c": false,
   "v": false,
   "memory": [],
-  "stack": [],
+  "memSize": 0,
+  "stackSize": 0,
   "program": [
     {
       "operation": 1,
