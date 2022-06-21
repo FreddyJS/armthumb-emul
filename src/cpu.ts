@@ -324,7 +324,7 @@ function defaultCPU(props: cpuProps = { memorySize: defaultMemorySize, stackSize
 
             let carry: boolean = false;
             for (let i = 0; i < shifts; i++) {
-              carry = (shiftValue & 0x80000000) != 0;
+              carry = (shiftValue & 0x80000000) !== 0;
               shiftValue = shiftValue << 1;
             }
 
@@ -344,7 +344,7 @@ function defaultCPU(props: cpuProps = { memorySize: defaultMemorySize, stackSize
 
             let carry: boolean = false;
             for (let i = 0; i < shifts; i++) {
-              carry = (shiftValue & 0x00000001) != 0;
+              carry = (shiftValue & 0x00000001) !== 0;
               shiftValue = shiftValue >> 1;
             }
 
@@ -364,9 +364,9 @@ function defaultCPU(props: cpuProps = { memorySize: defaultMemorySize, stackSize
 
             let carry: boolean = false;
             for (let i = 0; i < shifts; i++) {
-              const msb = (shiftValue & 0x80000000) != 0 ? 1 : 0;
-              carry = (shiftValue & 0x1) != 0;
-              shiftValue = (shiftValue >> 1) | msb << 31;
+              const msb = (shiftValue & 0x80000000) !== 0 ? 1 : 0;
+              carry = (shiftValue & 0x1) !== 0;
+              shiftValue = (shiftValue >> 1) | (msb << 31);
             }
 
             this.regs[destReg] = shiftValue >>> 0;
@@ -385,12 +385,12 @@ function defaultCPU(props: cpuProps = { memorySize: defaultMemorySize, stackSize
 
             let carry: boolean = false;
             for (let i = 0; i < shifts; i++) {
-              carry = (shiftValue & 0x1) != 0;
+              carry = (shiftValue & 0x1) !== 0;
 
               if (carry) {
                 shiftValue = (shiftValue >> 1) | 0x80000000;
               } else {
-                shiftValue = shiftValue >> 1 & 0x7FFFFFFF;
+                shiftValue = (shiftValue >> 1) & 0x7FFFFFFF;
               }
             }
 
