@@ -1,4 +1,4 @@
-import compile_assembly from '../compiler';
+import compileAssembly from '../compiler';
 import defaultCPU, { armCPU_T } from '../cpu';
 import * as fs from 'fs';
 
@@ -44,7 +44,7 @@ function runTest(test_name: string) {
 
   // Compile, load and run the assembly in the CPU
   expect(checkWithCrosscompiler(ASM_DIR + `${test_name}.S`)).toBe(true);
-  const program = compile_assembly(asm);
+  const program = compileAssembly(asm);
   expect(program.error).toBeUndefined();
   cpu.load(program);
   cpu.run();

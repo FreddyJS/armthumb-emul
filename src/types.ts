@@ -102,18 +102,24 @@ type Instruction = {
 
 // Assembler directives
 enum Directive {
+  TEXT,
+  DATA,
   EQUIV,
   EQV,
   EQU,
 }
 
 const wordToDirective: { [key: string]: Directive } = {
+  ".text": Directive.TEXT,
+  ".data": Directive.DATA,
   ".equiv": Directive.EQUIV,
   ".eqv": Directive.EQUIV,
   ".equ": Directive.EQU,
 }
 
 const directiveToWord: { [key: number]: string } = {
+  [Directive.TEXT]: ".text",
+  [Directive.DATA]: ".data",
   [Directive.EQUIV]: ".equiv",
   [Directive.EQV]: ".eqv",
   [Directive.EQU]: ".equ",
