@@ -89,7 +89,7 @@ function compileDirective(line: string) {
     case Directive.QUAD:
       {
         const args = line.split(',').map((arg) => arg.trim());
-        if (args.length == 0) {
+        if (args.length === 0) {
           return "No value provided for the .byte directive";
         }
 
@@ -109,7 +109,7 @@ function compileDirective(line: string) {
             return "Invalid value '" + args[i] + " for the .byte directive";
           }
 
-          while (savedBytes != bytesToSave) {
+          while (savedBytes !== bytesToSave) {
             const memIndex = Math.floor(memByteIndex / 4);
             const shifts = (memByteIndex % 4) * 8;
             const byte = value & 0xFF;
@@ -129,7 +129,7 @@ function compileDirective(line: string) {
     case Directive.SPACE:
       {
         const args = line.split(' ').map((arg) => arg.trim());
-        if (args.length != 1) {
+        if (args.length !== 1) {
           return "Invalid number of arguments for SPACE. Expected 1";
         }
 
