@@ -104,14 +104,17 @@ type Instruction = {
 enum Directive {
   TEXT,
   DATA,
+  BYTE,
   EQUIV,
   EQV,
   EQU,
+  TOTAL_DIRECTIVES,
 }
 
 const wordToDirective: { [key: string]: Directive } = {
   ".text": Directive.TEXT,
   ".data": Directive.DATA,
+  ".byte": Directive.BYTE,
   ".equiv": Directive.EQUIV,
   ".eqv": Directive.EQUIV,
   ".equ": Directive.EQU,
@@ -120,6 +123,7 @@ const wordToDirective: { [key: string]: Directive } = {
 const directiveToWord: { [key: number]: string } = {
   [Directive.TEXT]: ".text",
   [Directive.DATA]: ".data",
+  [Directive.BYTE]: ".byte",
   [Directive.EQUIV]: ".equiv",
   [Directive.EQV]: ".eqv",
   [Directive.EQU]: ".equ",

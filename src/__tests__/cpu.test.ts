@@ -1,4 +1,3 @@
-import compileAssembly from '../compiler';
 import defaultCPU, { armCPU_T } from '../cpu';
 import * as fs from 'fs';
 
@@ -44,9 +43,8 @@ function runTest(test_name: string) {
 
   // Compile, load and run the assembly in the CPU
   expect(checkWithCrosscompiler(ASM_DIR + `${test_name}.S`)).toBe(true);
-  const program = compileAssembly(asm);
-  expect(program.error).toBeUndefined();
-  cpu.load(program);
+  cpu.loadAssembly(asm);
+  expect(cpu.error).toBe(undefined);
   cpu.run();
 
   if (expected !== undefined) {
@@ -158,6 +156,11 @@ test('EQUIV', () => {
 });
 
 test('EQU', () => {
+	const test_name = expect.getState().currentTestName.toLowerCase();
+	runTest(test_name);
+});
+
+test('DATA', () => {
 	const test_name = expect.getState().currentTestName.toLowerCase();
 	runTest(test_name);
 });

@@ -1,6 +1,6 @@
 import compileAssembly, { assert, parseInmediateOperand } from './compiler';
 
-import { Operation, OperandType, Program, isInmediateValue } from './types';
+import { Operation, OperandType, Program, isInmediateValue, CompilerError } from './types';
 import type { Instruction } from './types';
 
 const defaultMemorySize = 64;
@@ -38,6 +38,7 @@ type armCPU_T = {
   memSize: number;
   stackSize: number;
   program: Instruction[];
+  error?: CompilerError;
 
   // Methods
   run: () => void;
@@ -65,6 +66,7 @@ function defaultCPU(props: cpuProps = { memorySize: defaultMemorySize, stackSize
     memSize: props.memorySize,
     stackSize: props.stackSize,
     program: [],
+    error: undefined,
 
     // Methods
     run() {
@@ -97,11 +99,20 @@ function defaultCPU(props: cpuProps = { memorySize: defaultMemorySize, stackSize
       this.program = program.ins;
     },
     loadAssembly(assembly: string) {
-      const compiled = compileAssembly(assembly);
-      if (compiled.error) {
-        throw new Error(compiled.error.message);
+      const [program, initialMemory] = compileAssembly(assembly);
+      if (program.error) {
+        this.error = program.error;
+        throw new Error(program.error.message);
       }
-      this.program = compiled.ins;
+
+      this.program = program.ins;
+      for (let i = 0; i < initialMemory.length; i++) {
+        if (i >= this.memory.length) {
+          this.memory.push(initialMemory[i]);
+        } else {
+          this.memory[i] = initialMemory[i];
+        }
+      }
     },
     execute(ins: Instruction) {
       assert(Operation.TOTAL_OPERATIONS === 17, 'Exhaustive handling of operations in execute');

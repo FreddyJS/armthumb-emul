@@ -1,0 +1,2 @@
+.data
+	.byte 0xf, 0xA, 0, 8

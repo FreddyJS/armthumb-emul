@@ -4,6 +4,8 @@ import type { Program, Instruction } from './types';
 
 // Object with the symbols defined by the user with .equiv, .eqv y .equ
 let symbols: { [key: string]: string } = {}
+let memory: number[] = []
+let memByteIndex = 0
 
 const assert = (condition: boolean, message: string) => {
   if (!condition) {
@@ -53,6 +55,7 @@ function compileDirective(line: string) {
   const directive = wordToDirective[line.split(' ')[0]];
   line = line.split(' ').slice(1).join('');
 
+  assert(Directive.TOTAL_DIRECTIVES === 6, 'Exhaustive handling of directives in compileDirective');
   switch (directive) {
     case Directive.EQUIV:
     case Directive.EQV:
@@ -71,6 +74,28 @@ function compileDirective(line: string) {
         }
 
         symbols[symbol] = value;
+        return
+      }
+    
+    case Directive.BYTE:
+      {
+        const args = line.split(',');
+        if (args.length == 0) {
+          return "No value provided for the .byte directive";
+        }
+
+        for (let i = 0; i < args.length; i++) {
+          const value = Number(args[i]);
+          if (value === undefined || value > 255) {
+            return "Invalid value '" + args[i] + " for the .byte directive";
+          }
+
+          const memIndex = Math.floor(memByteIndex/4);
+          const shifts = (memByteIndex % 4) * 8;
+          
+          memory[memIndex] = memory[memIndex] | (value << shifts)
+          memByteIndex++;
+        }
         return
       }
     default:
@@ -854,7 +879,7 @@ function lineToInstruction(line: string): Instruction | string {
   }
 }
 
-function compileAssembly(source: string): Program {
+function compileAssembly(source: string): [Program, number[]] {
   const labels: { [key: string]: number } = {};
   const lines = source.split('\n');
   let inTextSection = true;
@@ -935,10 +960,13 @@ function compileAssembly(source: string): Program {
 
       const directive = compileDirective(lines[i]);
       if (typeof directive === 'string') {
+        console.log("ERROR: " + directive)
         program.error = {
           line: i + 1,
           message: directive,
         }
+
+        break;
       }
     } else {
       program.error = {
@@ -951,8 +979,16 @@ function compileAssembly(source: string): Program {
 
   }
 
+  const retMem = [...memory];
+
+  resetCompiler();
+  return [program, retMem];
+}
+
+function resetCompiler() {
   symbols = {}
-  return program;
+  memory = []
+  memByteIndex = 0;
 }
 
 export default compileAssembly;
