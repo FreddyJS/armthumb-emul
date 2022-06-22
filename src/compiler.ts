@@ -1,4 +1,4 @@
-import { Operation, OperandType, wordToOperation, isLowHighRegister, isInmediateValue, Operand, wordToDirective, Directive } from './types';
+import { Operation, OperandType, wordToOperation, isLowHighRegister, isInmediateValue, Operand, wordToDirective, Directive, dataDirectives } from './types';
 import type { Program, Instruction } from './types';
 
 
@@ -1026,6 +1026,13 @@ function compileAssembly(source: string): [Program, number[]] {
       program.error = {
         line: i + 1,
         message: "Operations not supported in data section",
+      }
+
+      break;
+    } else if (directive !== undefined && inTextSection && dataDirectives.find((el) => el === directive)) {
+      program.error = {
+        line: i + 1,
+        message: "Data directives not supported in text section",
       }
 
       break;
