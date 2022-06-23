@@ -37,7 +37,8 @@
           "type": 4,
           "value": "#1"
         }
-      ]
+      ],
+      "break": false
     },
     {
       "operation": 13,
@@ -55,7 +56,8 @@
           "type": 4,
           "value": "#1"
         }
-      ]
+      ],
+      "break": false
     },
     {
       "operation": 0,
@@ -69,7 +71,8 @@
           "type": 4,
           "value": "#3"
         }
-      ]
+      ],
+      "break": false
     },
     {
       "operation": 13,
@@ -87,7 +90,8 @@
           "type": 4,
           "value": "#3"
         }
-      ]
+      ],
+      "break": false
     },
     {
       "operation": 0,
@@ -101,7 +105,8 @@
           "type": 4,
           "value": "#255"
         }
-      ]
+      ],
+      "break": false
     },
     {
       "operation": 13,
@@ -119,7 +124,8 @@
           "type": 4,
           "value": "#31"
         }
-      ]
+      ],
+      "break": false
     }
   ]
 }

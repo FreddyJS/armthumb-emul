@@ -37,7 +37,8 @@
           "type": 4,
           "value": "#1"
         }
-      ]
+      ],
+      "break": false
     },
     {
       "operation": 3,
@@ -51,7 +52,8 @@
           "type": 0,
           "value": "r0"
         }
-      ]
+      ],
+      "break": false
     }
   ]
 }

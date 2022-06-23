@@ -38,6 +38,7 @@
           "value": "#1"
         }
       ],
+      "break": false,
       "label": "label1"
     },
     {
@@ -53,6 +54,7 @@
           "value": "#1"
         }
       ],
+      "break": false,
       "label": "label2"
     }
   ]

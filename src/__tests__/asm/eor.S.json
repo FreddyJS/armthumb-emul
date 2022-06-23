@@ -37,7 +37,8 @@
           "type": 4,
           "value": "#1"
         }
-      ]
+      ],
+      "break": false
     },
     {
       "operation": 0,
@@ -51,7 +52,8 @@
           "type": 4,
           "value": "#3"
         }
-      ]
+      ],
+      "break": false
     },
     {
       "operation": 10,
@@ -65,7 +67,8 @@
           "type": 0,
           "value": "r0"
         }
-      ]
+      ],
+      "break": false
     },
     {
       "operation": 0,
@@ -79,7 +82,8 @@
           "type": 4,
           "value": "#255"
         }
-      ]
+      ],
+      "break": false
     },
     {
       "operation": 10,
@@ -93,7 +97,8 @@
           "type": 0,
           "value": "r2"
         }
-      ]
+      ],
+      "break": false
     }
   ]
 }

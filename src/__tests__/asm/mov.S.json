@@ -37,7 +37,8 @@
           "type": 4,
           "value": "#1"
         }
-      ]
+      ],
+      "break": false
     },
     {
       "operation": 0,
@@ -51,7 +52,8 @@
           "type": 3,
           "value": "#0x04"
         }
-      ]
+      ],
+      "break": false
     },
     {
       "operation": 0,
@@ -65,7 +67,8 @@
           "type": 0,
           "value": "r1"
         }
-      ]
+      ],
+      "break": false
     },
     {
       "operation": 0,
@@ -79,7 +82,8 @@
           "type": 0,
           "value": "r2"
         }
-      ]
+      ],
+      "break": false
     },
     {
       "operation": 0,
@@ -93,7 +97,8 @@
           "type": 1,
           "value": "r8"
         }
-      ]
+      ],
+      "break": false
     },
     {
       "operation": 0,
@@ -107,7 +112,8 @@
           "type": 1,
           "value": "r8"
         }
-      ]
+      ],
+      "break": false
     },
     {
       "operation": 0,
@@ -121,7 +127,8 @@
           "type": 1,
           "value": "r8"
         }
-      ]
+      ],
+      "break": false
     },
     {
       "operation": 0,
@@ -135,7 +142,8 @@
           "type": 2,
           "value": "r13"
         }
-      ]
+      ],
+      "break": false
     }
   ]
 }
