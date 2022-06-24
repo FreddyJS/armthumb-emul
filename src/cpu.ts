@@ -2,7 +2,7 @@ import compileAssembly from './compiler';
 
 import type { Instruction } from './types';
 import { Operation, OperandType, Program, CompilerError } from './types';
-import { assert, inmediateOperandNumber, isInmediateType } from './utils';
+import { assert, indirectOperandValues, inmediateOperandNumber, isInmediateType } from './utils';
 
 const defaultMemorySize = 64;
 const defaultStackSize = 64;
@@ -71,7 +71,7 @@ function defaultCPU(props: cpuProps = { memorySize: defaultMemorySize, stackSize
 
     // Methods
     run() {
-      for (let i = this.regs[PCREGISTER]/2; i < this.program.length; i++) {
+      for (let i = this.regs[PCREGISTER] / 2; i < this.program.length; i++) {
         const ins = this.program[i];
         if (ins.break === true) {
           ins.break = false;
@@ -132,7 +132,7 @@ function defaultCPU(props: cpuProps = { memorySize: defaultMemorySize, stackSize
       this.memory = this.memory.concat(new Array(this.stackSize).fill(0));
     },
     execute(ins: Instruction) {
-      assert(Operation.TOTAL_OPERATIONS === 17, 'Exhaustive handling of operations in execute');
+      assert(Operation.TOTAL_OPERATIONS === 18, 'Exhaustive handling of operations in execute');
       switch (ins.operation) {
         case Operation.MOV:
           {
@@ -419,6 +419,24 @@ function defaultCPU(props: cpuProps = { memorySize: defaultMemorySize, stackSize
             this.setFlag(Flags.Z, this.regs[destReg] === 0);
             this.setFlag(Flags.N, this.regs[destReg] > maxPositiveValue);
             this.setFlag(Flags.C, carry);
+          }
+          break;
+
+        case Operation.LDR:
+          {
+            const [op1, op2] = ins.operands;
+            const destReg = op1.value;
+
+            const [value1, value2] = indirectOperandValues(op2);
+            const offset = isInmediateType(value2.type) ? inmediateOperandNumber(value2) : this.regs[value2.value];
+            const address = this.regs[value1.value] + offset;
+
+            if (address / 4 >= this.memory.length) {
+              // TODO: This is out of memory, should return an error
+              this.regs[destReg] = 0x0
+            } else {
+              this.regs[destReg] = this.memory[address / 4];
+            }
           }
           break;
 

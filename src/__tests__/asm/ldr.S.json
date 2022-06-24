@@ -1,0 +1,104 @@
+{
+  "regs": {
+    "r0": 4,
+    "r1": 4294967295,
+    "r2": 2,
+    "r3": 0,
+    "r4": 2147483648,
+    "r5": 0,
+    "r6": 0,
+    "r7": 0,
+    "r8": 0,
+    "r9": 0,
+    "r10": 0,
+    "r11": 0,
+    "r12": 0,
+    "r13": 12,
+    "r14": 0,
+    "r15": 10
+  },
+  "z": false,
+  "n": false,
+  "c": false,
+  "v": false,
+  "memory": [
+    2147483648,
+    4294967295,
+    2
+  ],
+  "memSize": 3,
+  "stackSize": 0,
+  "program": [
+    {
+      "operation": 0,
+      "name": "mov",
+      "operands": [
+        {
+          "type": 0,
+          "value": "r0"
+        },
+        {
+          "type": 4,
+          "value": "#4"
+        }
+      ],
+      "break": false
+    },
+    {
+      "operation": 17,
+      "operands": [
+        {
+          "type": 0,
+          "value": "r1"
+        },
+        {
+          "type": 5,
+          "value": "[r0, #0]"
+        }
+      ],
+      "break": false
+    },
+    {
+      "operation": 17,
+      "operands": [
+        {
+          "type": 0,
+          "value": "r2"
+        },
+        {
+          "type": 5,
+          "value": "[r0, #4]"
+        }
+      ],
+      "break": false
+    },
+    {
+      "operation": 17,
+      "operands": [
+        {
+          "type": 0,
+          "value": "r3"
+        },
+        {
+          "type": 5,
+          "value": "[r13, #8]"
+        }
+      ],
+      "break": false
+    },
+    {
+      "operation": 17,
+      "operands": [
+        {
+          "type": 0,
+          "value": "r4"
+        },
+        {
+          "type": 5,
+          "value": "[r5, r6]"
+        }
+      ],
+      "break": false
+    }
+  ]
+}

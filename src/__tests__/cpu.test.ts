@@ -164,3 +164,8 @@ test('DATA', () => {
 	const test_name = expect.getState().currentTestName.toLowerCase();
 	runTest(test_name);
 });
+
+test('LDR', () => {
+	const test_name = expect.getState().currentTestName.toLowerCase();
+	runTest(test_name);
+});
