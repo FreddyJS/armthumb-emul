@@ -27,6 +27,7 @@ enum Operation {
   LDR,
   LDRH,
   LDRB,
+  LDRSH,
   TOTAL_OPERATIONS,
 }
 
@@ -58,6 +59,7 @@ const wordToOperation: { [key: string]: Operation } = {
   ldr: Operation.LDR,
   ldrh: Operation.LDRH,
   ldrb: Operation.LDRB,
+  ldrsh: Operation.LDRSH,
 };
 
 const operationToWord: { [key: number]: string } = {
@@ -88,6 +90,7 @@ const operationToWord: { [key: number]: string } = {
   [Operation.LDR]: 'ldr',
   [Operation.LDRH]: 'ldrh',
   [Operation.LDRB]: 'ldrb',
+  [Operation.LDRSH]: 'ldrsh',
 };
 
 enum OperandType {
