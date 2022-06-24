@@ -5,8 +5,8 @@
     "r2": 2,
     "r3": 0,
     "r4": 2147483648,
-    "r5": 0,
-    "r6": 0,
+    "r5": 65535,
+    "r6": 65535,
     "r7": 0,
     "r8": 0,
     "r9": 0,
@@ -15,7 +15,7 @@
     "r12": 0,
     "r13": 12,
     "r14": 0,
-    "r15": 10
+    "r15": 14
   },
   "z": false,
   "n": false,
@@ -46,6 +46,7 @@
     },
     {
       "operation": 17,
+      "name": "ldr",
       "operands": [
         {
           "type": 0,
@@ -60,6 +61,7 @@
     },
     {
       "operation": 17,
+      "name": "ldr",
       "operands": [
         {
           "type": 0,
@@ -74,6 +76,7 @@
     },
     {
       "operation": 17,
+      "name": "ldr",
       "operands": [
         {
           "type": 0,
@@ -88,6 +91,7 @@
     },
     {
       "operation": 17,
+      "name": "ldr",
       "operands": [
         {
           "type": 0,
@@ -96,6 +100,36 @@
         {
           "type": 5,
           "value": "[r5, r6]"
+        }
+      ],
+      "break": false
+    },
+    {
+      "operation": 18,
+      "name": "ldrh",
+      "operands": [
+        {
+          "type": 0,
+          "value": "r5"
+        },
+        {
+          "type": 5,
+          "value": "[r0, #0]"
+        }
+      ],
+      "break": false
+    },
+    {
+      "operation": 18,
+      "name": "ldrh",
+      "operands": [
+        {
+          "type": 0,
+          "value": "r6"
+        },
+        {
+          "type": 5,
+          "value": "[r0, #2]"
         }
       ],
       "break": false
