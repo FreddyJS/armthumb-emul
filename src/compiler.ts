@@ -221,7 +221,7 @@ function compileInstruction(line: string) {
     break: false,
   }
 
-  assert(Operation.TOTAL_OPERATIONS === 19, 'Exhaustive handling of operations in lineToInstruction');
+  assert(Operation.TOTAL_OPERATIONS === 20, 'Exhaustive handling of operations in lineToInstruction');
   switch (operation) {
     case Operation.MOV: {
       // CASE: MOV r1, [Rs | #0xFF]
@@ -746,6 +746,39 @@ function compileInstruction(line: string) {
         return throwCompilerError('Invalid 2 value for indirect values. Expected low register or #Inm');
       } else if (isInmediateType(value2Type) && (!inmediateInRange(value2, maxInmediate) || !isAligned(value2, 2))) {
         return throwCompilerError('Invalid inmediate value in indirect value. Expected #Inm 0-' + maxInmediate + ' aligned to 2');
+      }
+    } break;
+
+    case Operation.LDRB: {
+      // CASE: ldrh r1, [r2, r4 | #Inm]
+      const auxLine = line.split(' ').slice(1).join(' ');
+      const arg1 = auxLine.split(',')[0].trim();
+      const arg2 = auxLine.split(',').slice(1).join(',').trim();
+      const op1Type = argToOperandType(arg1);
+      const op2Type = argToOperandType(arg2);
+      args = [arg1, arg2];
+
+      if (op1Type === undefined || op1Type !== OperandType.LowRegister) {
+        return throwCompilerError('Invalid operand 1 for LDR. Expected low register (r[0-7]), got: ' + arg1);
+      } else if (op2Type === undefined || op2Type !== OperandType.IndirectValue) {
+        return throwCompilerError('Invalid operand 2 for LDR. Expected indirect value ([r0, #4]), got: ' + arg2);
+      }
+
+      // Operand two can only use low registers or #Inm
+      const value1 = arg2.split(',')[0].replace('[', '').trim();
+      const value2 = arg2.split(',')[1].replace(']', '').trim();
+      const value1Type = argToOperandType(value1);
+      const value2Type = argToOperandType(value2);
+
+      if (value1Type !== OperandType.LowRegister) {
+        return throwCompilerError('Invalid register for LDRB in indirect value. Use low register.');
+      }
+
+      const maxInmediate = 31;
+      if (value2Type !== OperandType.LowRegister && !isInmediateType(value2Type)) {
+        return throwCompilerError('Invalid 2 value for indirect values. Expected low register or #Inm');
+      } else if (isInmediateType(value2Type) && !inmediateInRange(value2, maxInmediate)) {
+        return throwCompilerError('Invalid inmediate value in indirect value. Expected #Inm 0-' + maxInmediate);
       }
     } break;
 

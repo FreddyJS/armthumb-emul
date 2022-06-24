@@ -6,6 +6,7 @@
     ldr r4, [r5, r6]
     ldrh r5, [r0, #0]
     ldrh r6, [r0, #2]
+    ldrb r7, [r7, #3]
 
 .data
     .word 0x80000000
