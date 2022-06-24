@@ -132,7 +132,7 @@ function defaultCPU(props: cpuProps = { memorySize: defaultMemorySize, stackSize
       this.memory = this.memory.concat(new Array(this.stackSize).fill(0));
     },
     execute(ins: Instruction) {
-      assert(Operation.TOTAL_OPERATIONS === 21, 'Exhaustive handling of operations in execute');
+      assert(Operation.TOTAL_OPERATIONS === 22, 'Exhaustive handling of operations in execute');
       switch (ins.operation) {
         case Operation.MOV:
           {
@@ -426,6 +426,7 @@ function defaultCPU(props: cpuProps = { memorySize: defaultMemorySize, stackSize
         case Operation.LDRH:
         case Operation.LDRB:
         case Operation.LDRSH:
+        case Operation.LDRSB:
           {
             const [op1, op2] = ins.operands;
             const destReg = op1.value;
@@ -460,7 +461,16 @@ function defaultCPU(props: cpuProps = { memorySize: defaultMemorySize, stackSize
                 }
 
                 if (this.regs[destReg] < 0) {
-                  this.regs[destReg] = this.regs[destReg] >>> 0; 
+                  this.regs[destReg] = this.regs[destReg] >>> 0;
+                }
+              } else if (ins.operation === Operation.LDRSB) {
+                const mod = address % 4;
+                this.regs[destReg] = this.memory[Math.floor(address / 4)] & (0xFF << (8 * mod));
+                this.regs[destReg] = this.regs[destReg] >>> (8 * mod)
+                this.regs[destReg] = (this.regs[destReg] << 24) >> 24;
+
+                if (this.regs[destReg] < 0) {
+                  this.regs[destReg] = this.regs[destReg] >>> 0;
                 }
               }
             }

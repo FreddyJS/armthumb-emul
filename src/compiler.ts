@@ -221,7 +221,7 @@ function compileInstruction(line: string) {
     break: false,
   }
 
-  assert(Operation.TOTAL_OPERATIONS === 21, 'Exhaustive handling of operations in lineToInstruction');
+  assert(Operation.TOTAL_OPERATIONS === 22, 'Exhaustive handling of operations in lineToInstruction');
   switch (operation) {
     case Operation.MOV: {
       // CASE: MOV r1, [Rs | #0xFF]
@@ -782,7 +782,9 @@ function compileInstruction(line: string) {
       }
     } break;
 
-    case Operation.LDRSH: {
+    case Operation.LDRSH: 
+    case Operation.LDRSB: 
+    {
       // CASE: ldrsh r1, [r2, r4]
       const auxLine = line.split(' ').slice(1).join(' ');
       const arg1 = auxLine.split(',')[0].trim();
@@ -792,9 +794,9 @@ function compileInstruction(line: string) {
       args = [arg1, arg2];
 
       if (op1Type === undefined || op1Type !== OperandType.LowRegister) {
-        return throwCompilerError('Invalid operand 1 for LDR. Expected low register (r[0-7]), got: ' + arg1);
+        return throwCompilerError('Invalid operand 1 for ' + operationToWord[operation] + '. Expected low register (r[0-7]), got: ' + arg1);
       } else if (op2Type === undefined || op2Type !== OperandType.IndirectValue) {
-        return throwCompilerError('Invalid operand 2 for LDR. Expected indirect value ([r0, #4]), got: ' + arg2);
+        return throwCompilerError('Invalid operand 2 for ' + operationToWord[operation] + '. Expected indirect value ([r0, #4]), got: ' + arg2);
       }
 
       // Operand two can only use low registers or #Inm
@@ -804,9 +806,9 @@ function compileInstruction(line: string) {
       const value2Type = argToOperandType(value2);
 
       if (value1Type !== OperandType.LowRegister) {
-        return throwCompilerError('Invalid register for LDRSH in indirect value. Use low register.');
+        return throwCompilerError('Invalid register for ' + operationToWord[operation] + ' in indirect value. Use low register.');
       } else if (value2Type !== OperandType.LowRegister) {
-        return throwCompilerError('Invalid register for LDRSH in indirect value. Use low register.');
+        return throwCompilerError('Invalid register for ' + operationToWord[operation] + ' in indirect value. Use low register.');
       }
     } break;
 
