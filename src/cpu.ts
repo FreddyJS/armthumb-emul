@@ -25,7 +25,7 @@ enum Flags {
   V
 }
 
-// const SPREGISTER = 'r13';
+const SPREGISTER = 'r13';
 // const LRREGISTER = 'r14';
 const PCREGISTER = 'r15';
 
@@ -132,7 +132,7 @@ function defaultCPU(props: cpuProps = { memorySize: defaultMemorySize, stackSize
       this.memory = this.memory.concat(new Array(this.stackSize).fill(0));
     },
     execute(ins: Instruction) {
-      assert(Operation.TOTAL_OPERATIONS === 25, 'Exhaustive handling of operations in execute');
+      assert(Operation.TOTAL_OPERATIONS === 27, 'Exhaustive handling of operations in execute');
       switch (ins.operation) {
         case Operation.MOV:
           {
@@ -514,6 +514,41 @@ function defaultCPU(props: cpuProps = { memorySize: defaultMemorySize, stackSize
                 }
                 this.memory[Math.floor(address / 4)] = (this.memory[Math.floor(address / 4)] & mask) | (toSave << (8 * mod))
               }
+            }
+          }
+          break;
+
+        case Operation.PUSH:
+          {
+            const [op1] = ins.operands;
+            const regList = op1.value.replace('{', '').replace('}', '').split(',');
+
+            for (let i = 0; i < regList.length; i++) {
+              let memIndex = this.regs[SPREGISTER] / 4;
+              if (memIndex === this.memory.length) {
+                this.memory.push(this.regs[regList[i].trim()]);
+              } else {
+                this.memory[memIndex] = this.regs[regList[i].trim()];
+              }
+              this.regs[SPREGISTER] += 4;
+              this.memSize++;
+            }
+          }
+          break;
+
+        case Operation.POP:
+          {
+            const [op1] = ins.operands;
+            const regList = op1.value.replace('{', '').replace('}', '').split(',');
+
+            for (let i = 0; i < regList.length; i++) {
+              let memIndex = this.regs[SPREGISTER] / 4 - 1;
+              if (memIndex < 0) {
+                this.regs[regList[i].trim()] = 0x00;
+              } else {
+                this.regs[regList[i].trim()] = this.memory[memIndex];
+              }
+              this.regs[SPREGISTER] -= 4;
             }
           }
           break;

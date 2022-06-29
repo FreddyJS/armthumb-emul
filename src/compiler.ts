@@ -221,7 +221,7 @@ function compileInstruction(line: string) {
     break: false,
   }
 
-  assert(Operation.TOTAL_OPERATIONS === 25, 'Exhaustive handling of operations in lineToInstruction');
+  assert(Operation.TOTAL_OPERATIONS === 27, 'Exhaustive handling of operations in lineToInstruction');
   switch (operation) {
     case Operation.MOV: {
       // CASE: MOV r1, [Rs | #0xFF]
@@ -913,6 +913,28 @@ function compileInstruction(line: string) {
       } else if (isInmediateType(value2Type) && !inmediateInRange(value2, maxInmediate)) {
         return throwCompilerError('Invalid inmediate value in indirect value. Expected #Inm 0-' + maxInmediate);
       }
+    } break;
+
+    case Operation.PUSH: {
+      // CASE: push {r1...}
+      const regList = line.split(' ').slice(1).join(' ');
+      const op1Type = argToOperandType(regList);
+
+      if (op1Type !== OperandType.RegisterList) {
+        return throwCompilerError('Invalid register list for PUSH. Expected push {r0, r1...}')
+      }
+      args = [regList]
+    } break;
+
+    case Operation.POP: {
+      // CASE: pop {r1...}
+      const regList = line.split(' ').slice(1).join(' ');
+      const op1Type = argToOperandType(regList);
+
+      if (op1Type !== OperandType.RegisterList) {
+        return throwCompilerError('Invalid register list for POP. Expected pop {r0, r1...}')
+      }
+      args = [regList]
     } break;
 
     default:

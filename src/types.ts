@@ -34,6 +34,10 @@ enum Operation {
   STR,
   STRH,
   STRB,
+
+  // Stack operations
+  PUSH,
+  POP,
   TOTAL_OPERATIONS,
 }
 
@@ -72,6 +76,10 @@ const wordToOperation: { [key: string]: Operation } = {
   str: Operation.STR,
   strh: Operation.STRH,
   strb: Operation.STRB,
+
+  // Stack operations
+  push: Operation.PUSH,
+  pop: Operation.POP,
 };
 
 const operationToWord: { [key: number]: string } = {
@@ -109,6 +117,10 @@ const operationToWord: { [key: number]: string } = {
   [Operation.STR]: 'str',
   [Operation.STRH]: 'strh',
   [Operation.STRB]: 'strb',
+
+  // Stack operations
+  [Operation.PUSH]: 'push',
+  [Operation.POP]: 'pop',
 };
 
 enum OperandType {
@@ -118,6 +130,7 @@ enum OperandType {
   HexInmediate,
   DecInmediate,
   IndirectValue,
+  RegisterList,
 }
 
 type CompilerError = {

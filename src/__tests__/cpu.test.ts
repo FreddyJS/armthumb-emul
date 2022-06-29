@@ -179,3 +179,8 @@ test('STR', () => {
 	const test_name = expect.getState().currentTestName.toLowerCase();
 	runTest(test_name);
 });
+
+test('STACK', () => {
+	const test_name = expect.getState().currentTestName.toLowerCase();
+	runTest(test_name);
+});
