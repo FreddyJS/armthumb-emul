@@ -7,6 +7,7 @@ import { argToOperandType, assert, inmediateInRange, isAligned, isInmediateType,
 // Global variables used by the compiler
 let program: Program = { ins: [], error: undefined }
 let symbols: { [key: string]: string } = {}
+let labels: string[] = []
 let memory: number[] = []
 let memByteIndex = 0
 
@@ -196,6 +197,7 @@ function compileDirective(line: string) {
  * @returns 
  */
 function compileInstruction(line: string) {
+  assert(Operation.TOTAL_OPERATIONS === 28, 'Exhaustive handling of operations in lineToInstruction');
   const words = line.split(' ');
   let args = words
     .slice(1)
@@ -203,9 +205,13 @@ function compileInstruction(line: string) {
     .split(',')
     .map((operand) => operand.trim());
 
-  const operation = wordToOperation[words[0]];
+  let operation = wordToOperation[words[0]];
   if (operation === undefined) {
-    return throwCompilerError('Unknown operation: ' + words[0]);
+    if (words[0].startsWith('b')) {
+      operation = Operation.B;
+    } else {
+      return throwCompilerError('Unknown operation: ' + words[0]);
+    }
   }
 
   for (let i = 0; i < args.length; i++) {
@@ -221,7 +227,6 @@ function compileInstruction(line: string) {
     break: false,
   }
 
-  assert(Operation.TOTAL_OPERATIONS === 27, 'Exhaustive handling of operations in lineToInstruction');
   switch (operation) {
     case Operation.MOV: {
       // CASE: MOV r1, [Rs | #0xFF]
@@ -937,14 +942,40 @@ function compileInstruction(line: string) {
       args = [regList]
     } break;
 
+    case Operation.B: {
+      const conditions = ['eq', 'hi', 'gt', 'ne', 'cs', 'ge', 'mi', 'cc', 'lt', 'pl', 'ls', 'le', 'vs', 'vc']
+      let valid = false;
+
+      if (words.length !== 2) {
+        return throwCompilerError('Missing label to jump to');
+      }
+
+      for (let i = 0; i < conditions.length; i ++) {
+        if (words[0].split('b')[1] === '' || words[0].split('b')[1] === conditions[i]) {
+          valid = true;
+        }
+      }
+
+      if (!valid) {
+        return throwCompilerError('Not valid condition to jump');
+      }
+
+      args = [words[1]]
+    } break;
+
     default:
       throw new Error('Unreachable code in lineToInstruction');
   }
 
   for (let i = 0; i < args.length; i++) {
-    const operandType = argToOperandType(args[i]);
+    let operandType = argToOperandType(args[i]);
     if (operandType === undefined) {
-      return throwCompilerError("Unexpected error in the compiler");
+      if (operation === Operation.B) {
+        instruction.name = words[0];
+        operandType = OperandType.Label;
+      } else {
+        return throwCompilerError("Unexpected error in the compiler");
+      }
     }
 
     const operand: Operand = {
@@ -1013,6 +1044,10 @@ function compileAssembly(source: string): [Program, number[]] {
       break;
     }
 
+    if (operation === undefined && firstWord.startsWith('b')) {
+      operation = Operation.B;
+    }
+
     if (operation !== undefined) {
       compileInstruction(lines[i].toLowerCase());
       if (label !== undefined) {
@@ -1052,7 +1087,16 @@ function compileAssembly(source: string): [Program, number[]] {
 
       break;
     }
+  }
 
+  for (let i = 0; i < program.ins.length; i++) {
+    const instruction = program.ins[i];
+    if (instruction.label !== undefined && labels[instruction.label] === undefined) {
+      program.error = {
+        line: 0,
+        message: 'Unknown label to jump: ' + instruction.label,
+      }
+    }
   }
 
   const retMemory = [...memory];

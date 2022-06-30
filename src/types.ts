@@ -38,6 +38,9 @@ enum Operation {
   // Stack operations
   PUSH,
   POP,
+
+  // Jump
+  B,
   TOTAL_OPERATIONS,
 }
 
@@ -80,6 +83,9 @@ const wordToOperation: { [key: string]: Operation } = {
   // Stack operations
   push: Operation.PUSH,
   pop: Operation.POP,
+
+  // Jump
+  b: Operation.B,
 };
 
 const operationToWord: { [key: number]: string } = {
@@ -121,6 +127,9 @@ const operationToWord: { [key: number]: string } = {
   // Stack operations
   [Operation.PUSH]: 'push',
   [Operation.POP]: 'pop',
+
+  // Jump
+  [Operation.B]: 'b',
 };
 
 enum OperandType {
@@ -131,6 +140,7 @@ enum OperandType {
   DecInmediate,
   IndirectValue,
   RegisterList,
+  Label,
 }
 
 type CompilerError = {
