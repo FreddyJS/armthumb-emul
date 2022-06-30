@@ -59,6 +59,131 @@ function runTest(test_name: string) {
   }
 }
 
+test('MOV', () => {
+  const test_name = expect.getState().currentTestName.toLowerCase();
+  runTest(test_name);
+});
+
+test('ADD', () => {
+  const test_name = expect.getState().currentTestName.toLowerCase();
+  runTest(test_name);
+});
+
+test('LABELS', () => {
+  const test_name = expect.getState().currentTestName.toLowerCase();
+  runTest(test_name);
+});
+
+test('SUB', () => {
+  const test_name = expect.getState().currentTestName.toLowerCase();
+  runTest(test_name);
+});
+
+test('NEG', () => {
+  const test_name = expect.getState().currentTestName.toLowerCase();
+  runTest(test_name);
+});
+
+test('MUL', () => {
+  const test_name = expect.getState().currentTestName.toLowerCase();
+  runTest(test_name);
+});
+
+
+test('CMP', () => {
+  const test_name = expect.getState().currentTestName.toLowerCase();
+  runTest(test_name);
+});
+
+test('CMN', () => {
+  const test_name = expect.getState().currentTestName.toLowerCase();
+  runTest(test_name);
+});
+
+test('AND', () => {
+	const test_name = expect.getState().currentTestName.toLowerCase();
+	runTest(test_name);
+});
+
+test('BIC', () => {
+	const test_name = expect.getState().currentTestName.toLowerCase();
+	runTest(test_name);
+});
+
+test('ORR', () => {
+	const test_name = expect.getState().currentTestName.toLowerCase();
+	runTest(test_name);
+});
+
+test('EOR', () => {
+	const test_name = expect.getState().currentTestName.toLowerCase();
+	runTest(test_name);
+});
+
+test('MVN', () => {
+	const test_name = expect.getState().currentTestName.toLowerCase();
+	runTest(test_name);
+});
+
+test('TST', () => {
+	const test_name = expect.getState().currentTestName.toLowerCase();
+	runTest(test_name);
+});
+
+test('LSL', () => {
+	const test_name = expect.getState().currentTestName.toLowerCase();
+	runTest(test_name);
+});
+
+test('LSR', () => {
+	const test_name = expect.getState().currentTestName.toLowerCase();
+	runTest(test_name);
+});
+
+test('ASR', () => {
+	const test_name = expect.getState().currentTestName.toLowerCase();
+	runTest(test_name);
+});
+
+test('ROR', () => {
+	const test_name = expect.getState().currentTestName.toLowerCase();
+	runTest(test_name);
+});
+
+test('EQUIV', () => {
+	const test_name = expect.getState().currentTestName.toLowerCase();
+	runTest(test_name);
+});
+
+test('EQU', () => {
+	const test_name = expect.getState().currentTestName.toLowerCase();
+	runTest(test_name);
+});
+
+test('DATA', () => {
+	const test_name = expect.getState().currentTestName.toLowerCase();
+	runTest(test_name);
+});
+
+test('LDR', () => {
+	const test_name = expect.getState().currentTestName.toLowerCase();
+	runTest(test_name);
+});
+
+test('LDRS', () => {
+	const test_name = expect.getState().currentTestName.toLowerCase();
+	runTest(test_name);
+});
+
+test('STR', () => {
+	const test_name = expect.getState().currentTestName.toLowerCase();
+	runTest(test_name);
+});
+
+test('STACK', () => {
+	const test_name = expect.getState().currentTestName.toLowerCase();
+	runTest(test_name);
+});
 
 test('JUMP', () => {
 	const test_name = expect.getState().currentTestName.toLowerCase();
