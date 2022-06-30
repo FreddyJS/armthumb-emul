@@ -7,7 +7,6 @@ import { argToOperandType, assert, inmediateInRange, isAligned, isInmediateType,
 // Global variables used by the compiler
 let program: Program = { ins: [], error: undefined }
 let symbols: { [key: string]: string } = {}
-let labels: string[] = []
 let memory: number[] = []
 let memByteIndex = 0
 
