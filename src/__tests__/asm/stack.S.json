@@ -26,8 +26,8 @@
     1,
     256
   ],
-  "memSize": 3,
-  "stackSize": 0,
+  "memSize": 0,
+  "stackSize": 3,
   "program": [
     {
       "operation": 0,
