@@ -2,31 +2,40 @@
   "regs": {
     "r0": 4,
     "r1": 4294967295,
-    "r2": 2,
+    "r2": 1819043144,
     "r3": 0,
     "r4": 2147483648,
     "r5": 65535,
-    "r6": 65535,
-    "r7": 128,
+    "r6": 128,
+    "r7": 1819043144,
     "r8": 0,
     "r9": 0,
     "r10": 0,
     "r11": 0,
     "r12": 0,
-    "r13": 12,
+    "r13": 28,
     "r14": 0,
-    "r15": 16
+    "r15": 18
   },
   "z": false,
   "n": false,
   "c": false,
   "v": false,
-  "memory": [
-    2147483648,
-    4294967295,
-    2
-  ],
-  "memSize": 3,
+  "memory": {
+    "symbols": {
+      "str": 8
+    },
+    "data": [
+      2147483648,
+      4294967295,
+      1819043144,
+      1867980911,
+      560229490,
+      512,
+      0
+    ]
+  },
+  "memSize": 7,
   "stackSize": 0,
   "program": [
     {
@@ -120,8 +129,8 @@
       "break": false
     },
     {
-      "operation": 18,
-      "name": "ldrh",
+      "operation": 19,
+      "name": "ldrb",
       "operands": [
         {
           "type": 0,
@@ -129,14 +138,29 @@
         },
         {
           "type": 5,
-          "value": "[r0, #2]"
+          "value": "[r7, #3]"
         }
       ],
       "break": false
     },
     {
-      "operation": 19,
-      "name": "ldrb",
+      "operation": 17,
+      "name": "ldr",
+      "operands": [
+        {
+          "type": 0,
+          "value": "r7"
+        },
+        {
+          "type": 7,
+          "value": "=str"
+        }
+      ],
+      "break": false
+    },
+    {
+      "operation": 17,
+      "name": "ldr",
       "operands": [
         {
           "type": 0,
@@ -144,7 +168,7 @@
         },
         {
           "type": 5,
-          "value": "[r7, #3]"
+          "value": "[r7]"
         }
       ],
       "break": false

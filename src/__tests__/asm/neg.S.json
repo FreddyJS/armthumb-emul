@@ -21,7 +21,10 @@
   "n": true,
   "c": false,
   "v": false,
-  "memory": [],
+  "memory": {
+    "symbols": {},
+    "data": []
+  },
   "memSize": 0,
   "stackSize": 0,
   "program": [

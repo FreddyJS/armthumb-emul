@@ -21,11 +21,14 @@
   "n": false,
   "c": false,
   "v": false,
-  "memory": [
-    32767,
-    4294967295,
-    2
-  ],
+  "memory": {
+    "symbols": {},
+    "data": [
+      32767,
+      4294967295,
+      2
+    ]
+  },
   "memSize": 3,
   "stackSize": 0,
   "program": [

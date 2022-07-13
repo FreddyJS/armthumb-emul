@@ -5,10 +5,13 @@
     ldr r3, [sp, #8]
     ldr r4, [r5, r6]
     ldrh r5, [r0, #0]
-    ldrh r6, [r0, #2]
-    ldrb r7, [r7, #3]
+    ldrb r6, [r7, #3]
+
+    ldr r7, =str
+    ldr r7, [r7]
 
 .data
-    .word 0x80000000
-    .word 0xFFFFFFFF
-    .word 0x02
+     .word 0x80000000
+     .word 0xFFFFFFFF
+str: .asciz "Hello World!"
+     .word 0x02
