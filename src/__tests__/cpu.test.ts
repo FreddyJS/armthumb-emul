@@ -194,3 +194,8 @@ test('BL', () => {
 	const test_name = expect.getState().currentTestName.toLowerCase();
 	runTest(test_name);
 });
+
+test('WFI', () => {
+	const test_name = expect.getState().currentTestName.toLowerCase();
+	runTest(test_name);
+});
