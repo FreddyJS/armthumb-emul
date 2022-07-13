@@ -864,8 +864,14 @@ function compileInstruction(line: string) {
       }
 
       // Operand two can only use low registers, sp or pc (pc not supported for now)
-      const value1 = arg2.split(',')[0].replace('[', '').trim();
-      const value2 = arg2.split(',')[1].replace(']', '').trim();
+      const value1 = arg2.split(',')[0].replace('[', '').replace(']', '').trim();
+      let value2 = arg2.split(',')[1];
+      if (value2 === undefined) {
+        value2 = '#0';
+      } else {
+        value2 = value2.replace(']', '').trim();
+      }
+
       const value1Type = argToOperandType(value1);
       const value2Type = argToOperandType(value2);
 
