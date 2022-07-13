@@ -278,7 +278,9 @@ function compileInstruction(line: string) {
               return throwCompilerError('Invalid inmediate for ADD. Number out of range. Expected 0-255 but got ' + args[1]);
             }
             break;
-
+            
+          case OperandType.LrRegister:
+          case OperandType.PcRegister:
           case OperandType.HighRegister:
             if (isInmediateType(op2Type)) {
               return throwCompilerError('Invalid operand 2 for ADD. Only low registers are allowed with inmediate values');
@@ -344,11 +346,13 @@ function compileInstruction(line: string) {
               } else {
                 return throwCompilerError('Invalid operand 3 for ADD. Expected #Inm, got ' + args[2]);
               }
-            } else if (op2Type !== OperandType.HighRegister) {
+            } else if (!isRegisterType(op2Type)) {
               return throwCompilerError('Invalid operand 2 for ADD. Expected r[0-15], got ' + args[1]);
             }
             break;
 
+          case OperandType.LrRegister:
+          case OperandType.PcRegister:
           case OperandType.HighRegister:
             if (!isRegisterType(op2Type)) {
               return throwCompilerError('Invalid operand 2 for ADD. Expected r[0-15], got ' + args[1]);
@@ -384,10 +388,10 @@ function compileInstruction(line: string) {
       const op2Type = argToOperandType(args[1]);
       const op3Type = argToOperandType(args[2]);
 
-      if (op1Type === undefined || isInmediateType(op1Type) || op1Type === OperandType.HighRegister) {
-        return throwCompilerError('Invalid operand 1 for SUB. Expected r[0-7] or #Inm, got ' + args[0]);
-      } else if (op2Type === undefined || op2Type === OperandType.HighRegister) {
-        return throwCompilerError('Invalid operand 2 for SUB. Expected r[0-7] or #Inm, got ' + args[1]);
+      if (op1Type === undefined || (op1Type !== OperandType.LowRegister && op1Type !== OperandType.SpRegister)) {
+        return throwCompilerError('Invalid operand 1 for SUB. Expected r[0-7] or sp, got ' + args[0]);
+      } else if (op2Type === undefined || (op2Type !== OperandType.LowRegister && op2Type !== OperandType.SpRegister && !isInmediateType(op2Type))) {
+        return throwCompilerError('Invalid operand 2 for SUB. Expected r[0-7], sp or #Inm, got ' + args[1]);
       }
 
       // Short form. op1Type is always a low register or sp
